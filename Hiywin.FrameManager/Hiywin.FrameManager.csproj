@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hiywin.IFrameManager\Hiywin.IFrameManager.csproj" />
+    <ProjectReference Include="..\Hiywin.IFrameService\Hiywin.IFrameService.csproj" />
+  </ItemGroup>
+
+</Project>
