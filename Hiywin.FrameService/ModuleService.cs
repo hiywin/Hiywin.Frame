@@ -3,8 +3,6 @@ using Hiywin.Entities.Frame;
 using Hiywin.IFrameService;
 using Hiywin.IFrameService.Structs;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hiywin.FrameService
 {

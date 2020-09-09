@@ -4,5 +4,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hiywin.Common\Hiywin.Common.csproj" />
+    <ProjectReference Include="..\Hiywin.IFrameManager\Hiywin.IFrameManager.csproj" />
+    <ProjectReference Include="..\Hiywin.IFrameService\Hiywin.IFrameService.csproj" />
+  </ItemGroup>
+
 
 </Project>

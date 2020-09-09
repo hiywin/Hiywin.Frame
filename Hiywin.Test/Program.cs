@@ -1,9 +1,6 @@
-﻿using Autofac;
-using Hiywin.Common.IoC;
+﻿using Hiywin.Common.IoC;
 using Hiywin.IFrameManager;
-using Hiywin.Utility;
 using System;
-using System.Reflection;
 
 namespace Hiywin.Test
 {

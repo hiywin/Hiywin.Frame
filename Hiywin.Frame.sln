@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiywin.IFrameManager", "Hiy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiywin.IFrameService", "Hiywin.IFrameService\Hiywin.IFrameService.csproj", "{CE8EE8D6-C45F-421A-BF8A-D7B26258C003}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiywin.Test", "Hiywin.Test\Hiywin.Test.csproj", "{C936D8D8-7EBE-4D91-BB8F-66C85BC097A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiywin.Test", "Hiywin.Test\Hiywin.Test.csproj", "{C936D8D8-7EBE-4D91-BB8F-66C85BC097A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -57,15 +58,16 @@ namespace Hiywin.Common.IoC
         /// <param name="interfaceAssemblyName">接口程序集</param>
         public static void Register(string implementationAssemblyFullName, string interfaceAssemblyName)
         {
+            interfaceAssemblyName = interfaceAssemblyName.Replace(".dll", string.Empty);
             var implementactionAssembly = Assembly.LoadFrom(implementationAssemblyFullName);
-            var interfaceAssembly = Assembly.LoadFrom(interfaceAssemblyName);
+            var interfaceAssembly = Assembly.Load(interfaceAssemblyName);
             var implementationTypes =
                 implementactionAssembly.DefinedTypes.Where(t =>
                 t.IsClass && !t.IsAbstract && !t.IsGenericType && !t.IsNested);
             foreach (var type in implementationTypes)
             {
                 var typeNameSpace = type.Namespace;
-                interfaceAssemblyName = interfaceAssemblyName.Replace(".dll", string.Empty);
+
                 if (interfaceAssemblyName.Contains("Entities") && typeNameSpace.Contains("Models"))
                 {
                     interfaceAssemblyName = typeNameSpace.Replace("Models", "Entities");
@@ -78,6 +80,41 @@ namespace Hiywin.Common.IoC
                     {
                         _dicType.Add(interfaceType, type);
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 加载主目录、文件夹程序集，统一注入
+        /// </summary>
+        /// <param name="folderPath"></param>
+        public static void RegisterLayers(string folderPath)
+        {
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            DirectoryInfo folder = new DirectoryInfo(folderPath);
+            foreach (FileInfo fileInfo in folder.GetFiles("Hiywin.*.dll"))
+            {
+                var fileName = fileInfo.Name;
+                var interfaceAssemblyName = string.Empty;
+
+                var fileNameArray = fileName.Split('.');
+                foreach (var tempName in fileNameArray)
+                {
+                    if (tempName.Contains("Service") || tempName.Contains("Manager"))
+                    {
+                        interfaceAssemblyName = fileName.Replace(tempName, "I" + tempName);
+                    }
+                    if (tempName.Contains("Models"))
+                    {
+                        interfaceAssemblyName = fileName.Replace(tempName, "Entities");
+                    }
+                }
+                if (!string.IsNullOrEmpty(interfaceAssemblyName))
+                {
+                    IoCContainer.Register(fileInfo.FullName, interfaceAssemblyName);
                 }
             }
         }
@@ -100,15 +137,15 @@ namespace Hiywin.Common.IoC
                 var interfaceTypeName = string.Empty;
                 if (type.Namespace != null)
                 {
-                    if (type.Namespace.Contains("Services") && type.Namespace.Contains("Hiywin")) 
+                    if (type.Namespace.Contains("Services") && type.Namespace.Contains("Hiywin"))
                     {
                         interfaceTypeName = namespaceName + ".IServices.I" + type.Name;
                     }
-                    if(type.Namespace.Contains("Managers") && type.Namespace.Contains("Hiywin"))
+                    if (type.Namespace.Contains("Managers") && type.Namespace.Contains("Hiywin"))
                     {
                         interfaceTypeName = namespaceName + ".IManagers.I" + type.Name;
                     }
-                    if(!string.IsNullOrEmpty(interfaceTypeName) && !interfaceTypeName.Contains("OperationLogEvent"))
+                    if (!string.IsNullOrEmpty(interfaceTypeName) && !interfaceTypeName.Contains("OperationLogEvent"))
                     {
                         var interfaceType = interfaceAssembly.GetType(interfaceTypeName);
                         if (interfaceType != null)
@@ -140,11 +177,11 @@ namespace Hiywin.Common.IoC
             foreach (var type in implementationTypes)
             {
                 var interfaceTypeName = string.Empty;
-                if(type.Namespace.Contains("Services"))
+                if (type.Namespace.Contains("Services"))
                 {
                     interfaceTypeName = namespaceName + ".IServices.I" + type.Name;
                 }
-                if(type.Namespace.Contains("Managers"))
+                if (type.Namespace.Contains("Managers"))
                 {
                     interfaceTypeName = namespaceName + ".IManagers.I" + type.Name;
                 }
@@ -167,7 +204,7 @@ namespace Hiywin.Common.IoC
         /// </summary>
         /// <typeparam name="TInterface">接口</typeparam>
         /// <typeparam name="TImplementation">实现类</typeparam>
-        public static void Register<TInterface,TImplementation>() where TImplementation : TInterface
+        public static void Register<TInterface, TImplementation>() where TImplementation : TInterface
         {
             _dicType.Add(typeof(TInterface), typeof(TImplementation));
         }

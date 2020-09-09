@@ -1,9 +1,6 @@
 ﻿using Hiywin.Entities.Frame;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hiywin.FrameManager
 {
