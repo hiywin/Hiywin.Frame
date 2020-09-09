@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Hiywin.IFrameService\Hiywin.IFrameService.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Api\$(OutDir)ManagerLayers\&quot;" />
+  </Target>
+
 </Project>

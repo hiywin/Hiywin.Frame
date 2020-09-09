@@ -8,4 +8,8 @@
     <ProjectReference Include="..\Hiywin.Entities\Hiywin.Entities.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Api\$(OutDir)EntityLayers\&quot;" />
+  </Target>
+
 </Project>
