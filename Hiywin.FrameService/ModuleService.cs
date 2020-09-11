@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Hiywin.FrameService
@@ -18,6 +19,15 @@ namespace Hiywin.FrameService
         public async Task<DataResult<List<ISysModuleModel>>> GetModulesAllAsync(QueryData<SysModuleQuery> query)
         {
             var lr = new DataResult<List<ISysModuleModel>>();
+
+            StringBuilder builder=new StringBuilder();
+
+            //string aa = "哈哈";
+            //int bb = 10;
+            //bool cc = true;
+            //StringHelper.StringAdd(builder, aa);
+            //StringHelper.StringAdd(builder, bb);
+            //StringHelper.StringAdd(builder, cc);
 
             string condition = @" where 1=1 ";
             condition += string.IsNullOrEmpty(query.Criteria.ModuleNo) ? string.Empty : string.Format(" and ModuleNo = '{0}' ", query.Criteria.ModuleNo);
