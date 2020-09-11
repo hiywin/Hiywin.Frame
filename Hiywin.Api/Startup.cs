@@ -1,4 +1,5 @@
 using Hiywin.Common.Authorize;
+using Hiywin.Common;
 using Hiywin.Common.Jwt;
 using Hiywin.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -65,6 +66,11 @@ namespace Hiywin.Api
             });
 
             IoCBuild.Init(services);
+
+            ConfigOptions.MysqlOptConn = Configuration["ConnectionStrings:MysqlOptConn"];
+            ConfigOptions.MysqlSearchConn = Configuration["ConnectionStrings:MysqlSearchConn"];
+            ConfigOptions.MssqlOptConn = Configuration["ConnectionStrings:MssqlOptConn"];
+            ConfigOptions.MssqlSearchConn = Configuration["ConnectionStrings:MssqlSearchConn"];
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

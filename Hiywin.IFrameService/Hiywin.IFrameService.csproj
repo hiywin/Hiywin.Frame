@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hiywin.Common\Hiywin.Common.csproj" />
     <ProjectReference Include="..\Hiywin.Entities\Hiywin.Entities.csproj" />
   </ItemGroup>
 

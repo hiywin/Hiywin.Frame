@@ -1,12 +1,13 @@
-﻿using Hiywin.Entities.Frame;
-using System;
+﻿using Hiywin.Common.Data;
+using Hiywin.Entities.Frame;
+using Hiywin.IFrameService.Structs;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Hiywin.IFrameService
 {
     public interface IModuleService
     {
-        ISysModuleModel GetModules(Structs.ModuleQuery moduleModel);
+        Task<DataResult<List<ISysModuleModel>>> GetModulesAllAsync(QueryData<SysModuleQuery> query);
     }
 }

@@ -1,6 +1,11 @@
-﻿using Hiywin.Entities.Frame;
+﻿using Hiywin.Common.Data;
+using Hiywin.Entities.Frame;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService;
+using Hiywin.IFrameService.Structs;
+using Hiywin.Models.Frame;
+using System;
+using System.Threading.Tasks;
 
 namespace Hiywin.FrameManager
 {
@@ -12,16 +17,45 @@ namespace Hiywin.FrameManager
         {
             _service = service;
         }
-        public ISysModuleModel GetModuleManager()
+        public async Task<ListResult<ISysModuleModel>> GetModluleAllAsync()
         {
-            var condition = new IFrameService.Structs.ModuleQuery()
+            var lr = new ListResult<ISysModuleModel>();
+            var dt = DateTime.Now;
+
+            var queryEx = new QueryData<SysModuleQuery>()
             {
-                Name = "James"
+                Criteria = new SysModuleQuery()
+                {
+                    IsDelete = false
+                }
             };
+            var res = await _service.GetModulesAllAsync(queryEx);
+            if (res.HasErr)
+            {
+                lr.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                foreach (var item in res.Data)
+                {
+                    var info = new SysModuleModel();
+                    info.ModuleNo = item.ModuleNo;
+                    info.ModuleName = item.ModuleName;
+                    info.ParentNo = item.ParentNo;
+                    info.Icon = item.Icon;
+                    info.Url = item.Url;
+                    info.Category = item.Category;
+                    info.Target = item.Target;
+                    info.IsResource = item.IsResource;
+                    info.App = item.App;
+                    info.Sort = item.Sort;
+                    lr.Results.Add(info);
+                }
+                lr.SetInfo("成功", 200);
+            }
 
-            var result = _service.GetModules(condition);
-
-            return result;
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
         }
     }
 }

@@ -60,9 +60,9 @@ namespace Hiywin.Api.Controllers
         }
 
         [HttpGet, HttpPost,Route("get_modules")]
-        public ActionResult GetModules()
+        public async Task<ActionResult> GetModules()
         {
-            var result = _manager.GetModuleManager();
+            var result = await _manager.GetModluleAllAsync();
 
             return Ok(result);
         }
