@@ -8,6 +8,11 @@
     <ProjectReference Include="..\Hiywin.Common\Hiywin.Common.csproj" />
     <ProjectReference Include="..\Hiywin.IFrameManager\Hiywin.IFrameManager.csproj" />
     <ProjectReference Include="..\Hiywin.IFrameService\Hiywin.IFrameService.csproj" />
+    <ProjectReference Include="..\Hiywin.Utility\Hiywin.Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
   </ItemGroup>
 
 

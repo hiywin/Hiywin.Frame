@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Hiywin.Common.IoC;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Hiywin.Common.IoC
+namespace Hiywin.Utility
 {
-    public class IoCOperaters
+    public class IoCFrameOperaters
     {
         private static List<string> _layerAssemblys;
 
-        public static object Init(IServiceCollection serviceDescriptors = null)
+        public static void Init()
         {
             _layerAssemblys = new List<string>();
 
@@ -21,14 +21,12 @@ namespace Hiywin.Common.IoC
             IoCManagersInit();
 
             IoCModelsInit();
-
-            return IoCBuild(serviceDescriptors);
         }
 
         /// <summary>
         /// 主目录下程序集注入
         /// </summary>
-        public static void IoCAssemblyInit()
+        private static void IoCAssemblyInit()
         {
             var baseDir = AppContext.BaseDirectory;
             DirectoryInfo folder = new DirectoryInfo(baseDir);
@@ -48,7 +46,7 @@ namespace Hiywin.Common.IoC
         /// <summary>
         /// 数据层注入
         /// </summary>
-        public static void IoCServicesInit()
+        private static void IoCServicesInit()
         {
             var layersPath = AppContext.BaseDirectory + "ServiceLayers";
 
@@ -58,7 +56,7 @@ namespace Hiywin.Common.IoC
         /// <summary>
         /// 业务层注入
         /// </summary>
-        public static void IoCManagersInit()
+        private static void IoCManagersInit()
         {
             var layersPath = AppContext.BaseDirectory + "ManagerLayers";
 
@@ -68,28 +66,11 @@ namespace Hiywin.Common.IoC
         /// <summary>
         /// 实体层注入
         /// </summary>
-        public static void IoCModelsInit()
+        private static void IoCModelsInit()
         {
             var layersPath = AppContext.BaseDirectory + "EntityLayers";
 
             IoCContainer.RegisterLayers(layersPath);
-        }
-
-        /// <summary>
-        /// 构建IoC容器
-        /// </summary>
-        /// <param name="serviceDescriptors"></param>
-        /// <returns></returns>
-        public static object IoCBuild(IServiceCollection serviceDescriptors = null)
-        {
-            if (serviceDescriptors == null)
-            {
-                return IoCContainer.Build();
-            }
-            else
-            {
-                return IoCContainer.Build(serviceDescriptors);
-            }
         }
     }
 }

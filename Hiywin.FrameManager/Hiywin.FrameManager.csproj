@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Api\$(OutDir)ManagerLayers\&quot;" />
+    <Exec Command="xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Api\$(OutDir)ManagerLayers\&quot;&#xD;&#xA;xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Test\$(OutDir)ManagerLayers\&quot;" />
   </Target>
 
 </Project>

@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Api\$(OutDir)EntityLayers\&quot;" />
+    <Exec Command="xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Api\$(OutDir)EntityLayers\&quot;&#xD;&#xA;xcopy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)Hiywin.Test\$(OutDir)EntityLayers\&quot;" />
   </Target>
 
 </Project>

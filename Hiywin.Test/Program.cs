@@ -1,5 +1,6 @@
 ﻿using Hiywin.Common.IoC;
 using Hiywin.IFrameManager;
+using Hiywin.Utility;
 using System;
 
 namespace Hiywin.Test
@@ -10,9 +11,7 @@ namespace Hiywin.Test
         {
             Console.WriteLine("Hello World!");
 
-            //var dd = Assembly.Load("Hiywin.IFrameService");
-
-            IoCOperaters.Init();
+            IoCBuild.Init();
 
             Console.WriteLine("请输入运行码：");
 
