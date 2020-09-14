@@ -7,6 +7,14 @@ namespace Hiywin.Common.Helpers
 {
     public class StringHelper
     {
+        /// <summary>
+        /// SQL查询参数拼接，将参数、值直接拼接
+        /// 示例：StringHelper.StringAdd(builder, " ModuleNo = '{0}' ", query.Criteria.ModuleNo);
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="formater"></param>
+        /// <param name="paramValue"></param>
+        /// <param name="condition"></param>
         public static void StringAdd(StringBuilder builder, string formater, object paramValue, string condition = " and ")
         {
             switch (paramValue?.GetType()?.Name)
@@ -34,6 +42,14 @@ namespace Hiywin.Common.Helpers
             }
         }
 
+        /// <summary>
+        /// SQL查询参数拼接，采用匿名函数拼接，防注入漏洞
+        /// 示例：StringHelper.ParameterAdd(builder, "ModuleNo = @ModuleNo", query.Criteria.ModuleNo);
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="formater"></param>
+        /// <param name="paramValue"></param>
+        /// <param name="condition"></param>
         public static void ParameterAdd(StringBuilder builder, string formater, object paramValue, string condition = " and ")
         {
             if (!string.IsNullOrEmpty(formater))

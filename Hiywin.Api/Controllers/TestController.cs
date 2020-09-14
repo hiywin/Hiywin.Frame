@@ -1,4 +1,5 @@
 ﻿using Hiywin.Api.Models;
+using Hiywin.Api.Models.Account;
 using Hiywin.Common.Data;
 using Hiywin.Common.IoC;
 using Hiywin.Common.Jwt;
