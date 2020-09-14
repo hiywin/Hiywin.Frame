@@ -6,21 +6,27 @@ namespace Hiywin.Common.Helpers
 {
     public class StringHelper
     {
-        public static void StringAdd(StringBuilder builder, string formater, object condition)
+        public static void StringAdd(StringBuilder builder, string formater, object param, string condition=" and ")
         {
-            switch (condition?.GetType()?.Name)
+            switch (param?.GetType()?.Name)
             {
                 case "String":
-                        builder.Append(string.Format(formater, condition));
+                    if (!string.IsNullOrEmpty(param.ToString()))
+                    {
+                        if (builder.Length > 0) builder.Append(condition);
+                        builder.Append(string.Format(formater, param));
+                    }
                     break;
                 case "Int32":
-                    if ((int)condition>0)
+                    if ((int)param > 0)
                     {
-                        builder.Append(string.Format(formater, condition));
+                        if (builder.Length > 0) builder.Append(condition);
+                        builder.Append(string.Format(formater, param));
                     }
                     break;
                 case "Boolean":
-                    builder.Append(string.Format(formater, condition));
+                    if (builder.Length > 0) builder.Append(condition);
+                    builder.Append(string.Format(formater, param));
                     break;
                 default:
                     break;

@@ -21,21 +21,19 @@ namespace Hiywin.FrameService
             var lr = new DataResult<List<ISysModuleModel>>();
 
             StringBuilder builder=new StringBuilder();
+            string sqlCondition = string.Empty;
 
-            //string aa = "哈哈";
-            //int bb = 10;
-            //bool cc = true;
-            //StringHelper.StringAdd(builder, aa);
-            //StringHelper.StringAdd(builder, bb);
-            //StringHelper.StringAdd(builder, cc);
+            StringHelper.StringAdd(builder, " ModuleNo = '{0}' ", query.Criteria.ModuleNo);
+            StringHelper.StringAdd(builder, " ModuleName = '{0}' ", query.Criteria.ModuleName);
+            StringHelper.StringAdd(builder, " IsDelete = {0} ", query.Criteria.IsDelete);
 
-            string condition = @" where 1=1 ";
-            condition += string.IsNullOrEmpty(query.Criteria.ModuleNo) ? string.Empty : string.Format(" and ModuleNo = '{0}' ", query.Criteria.ModuleNo);
-            condition += string.IsNullOrEmpty(query.Criteria.ModuleName) ? string.Empty : string.Format(" and ModuleName = '{0}' ", query.Criteria.ModuleName);
-            condition += query.Criteria.IsDelete == null ? string.Empty : string.Format(" and IsDelete = {0} ", query.Criteria.IsDelete);
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
             string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort " +
                 "from sys_module"
-                + condition;
+                + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
             {
                 try

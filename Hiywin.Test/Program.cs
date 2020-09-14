@@ -27,7 +27,7 @@ namespace Hiywin.Test
         static async void TestIoC()
         {
             IModuleManager _manager = IoCContainer.Resolve<IModuleManager>();
-            var result = await _manager.GetModluleAllAsync();
+            var result = await _manager.GetModluleAllAsync(new Common.Data.QueryData<IFrameService.Structs.SysModuleQuery>());
 
             Console.WriteLine($"{result.Data.ModuleName} 今年 {result.Data.ModuleNo} 岁了！！！");
 

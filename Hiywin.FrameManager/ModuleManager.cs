@@ -17,7 +17,7 @@ namespace Hiywin.FrameManager
         {
             _service = service;
         }
-        public async Task<ListResult<ISysModuleModel>> GetModluleAllAsync()
+        public async Task<ListResult<ISysModuleModel>> GetModluleAllAsync(QueryData<SysModuleQuery> query)
         {
             var lr = new ListResult<ISysModuleModel>();
             var dt = DateTime.Now;
@@ -29,7 +29,7 @@ namespace Hiywin.FrameManager
                     IsDelete = false
                 }
             };
-            var res = await _service.GetModulesAllAsync(queryEx);
+            var res = await _service.GetModulesAllAsync(query);
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);

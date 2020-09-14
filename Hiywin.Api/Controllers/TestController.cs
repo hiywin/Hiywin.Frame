@@ -3,6 +3,7 @@ using Hiywin.Common.Data;
 using Hiywin.Common.IoC;
 using Hiywin.Common.Jwt;
 using Hiywin.IFrameManager;
+using Hiywin.IFrameService.Structs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -20,6 +21,18 @@ namespace Hiywin.Api.Controllers
         {
             _manager = IoCContainer.Resolve<IModuleManager>();
             _jwtFactory = IoCContainer.Resolve<IJwtFactory>();
+        }
+
+        /// <summary>
+        /// 启动提示
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet,Route("app_loaded")]
+        public ActionResult AppLoaded()
+        {
+            string result = "程序启动成功...";
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -60,9 +73,17 @@ namespace Hiywin.Api.Controllers
         }
 
         [HttpGet, HttpPost,Route("get_modules")]
-        public async Task<ActionResult> GetModules()
+        public async Task<ActionResult> GetModules(ModuleViewModel model)
         {
-            var result = await _manager.GetModluleAllAsync();
+            var query = new QueryData<SysModuleQuery>()
+            {
+                Criteria = new SysModuleQuery
+                {
+                    ModuleName = model.ModuleName,
+                    IsDelete = false
+                }
+            };
+            var result = await _manager.GetModluleAllAsync(query);
 
             return Ok(result);
         }

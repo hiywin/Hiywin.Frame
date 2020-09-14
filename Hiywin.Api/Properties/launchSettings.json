@@ -12,7 +12,7 @@
     "Hiywin.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "v1/api/test/get_modules",
+      "launchUrl": "v1/api/test/app_loaded",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
