@@ -1,2 +1,2 @@
 # Hiywin.Frame
-.Net Core 3.1 + Autofac 架构模板
+.Net Core 3.1 + Autofac + JWT 架构模板
