@@ -30,5 +30,9 @@ namespace Hiywin.Models.Frame
         public string UpdateName { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string IsDelete { get; set; }
+        public string StaffNo { get; set; }
+        public string CompanyNo { get; set; }
+        public bool IsAdmin { get; set; }
+        public string AdAccount { get; set; }
     }
 }

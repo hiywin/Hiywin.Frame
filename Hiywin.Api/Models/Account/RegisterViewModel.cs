@@ -15,5 +15,7 @@ namespace Hiywin.Api.Models.Account
         public string Password { get; set; }
         [Required]
         public AppEnum App { get; set; }
+        public string StaffNo { get; set; }
+        public string AdAccount { get; set; }
     }
 }

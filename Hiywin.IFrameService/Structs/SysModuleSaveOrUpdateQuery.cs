@@ -1,11 +1,10 @@
-﻿using Hiywin.Entities.Frame;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hiywin.Models.Frame
+namespace Hiywin.IFrameService.Structs
 {
-    public class SysModuleModel: ISysModuleModel
+    public class SysModuleSaveOrUpdateQuery
     {
         public int Id { get; set; }
         public string ModuleNo { get; set; }

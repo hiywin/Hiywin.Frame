@@ -42,6 +42,9 @@ namespace Hiywin.Api.Controllers
                         case "adAccount":
                             user.AdAccount = claim.Value;
                             break;
+                        case "staffNo":
+                            user.StaffNo = claim.Value;
+                            break;
                         case "isAdmin":
                             user.IsAdmin = Convert.ToBoolean(claim.Value);
                             break;

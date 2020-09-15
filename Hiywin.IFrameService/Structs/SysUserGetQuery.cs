@@ -7,7 +7,10 @@ namespace Hiywin.IFrameService.Structs
     public class SysUserGetQuery
     {
         public string UserName { get; set; }
+        public string StaffNo { get; set; }
+        public string AdAccount { get; set; }
         public string Pwd { get; set; }
         public bool IsDelete { get; set; }
+        public int App { get; set; }
     }
 }

@@ -1,13 +1,12 @@
-﻿using Hiywin.Entities.Frame;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Hiywin.Models.Frame
+namespace Hiywin.Api.Models.Module
 {
-    public class SysModuleModel: ISysModuleModel
+    public class ModuleSaveOrUpdateViewModel
     {
-        public int Id { get; set; }
         public string ModuleNo { get; set; }
         public string ModuleName { get; set; }
         public string ParentNo { get; set; }
@@ -17,12 +16,6 @@ namespace Hiywin.Models.Frame
         public string Target { get; set; }
         public int IsResource { get; set; }
         public int App { get; set; }
-        public string Creator { get; set; }
-        public string CreateName { get; set; }
-        public DateTime CreateTime { get; set; }
-        public string Updator { get; set; }
-        public string UpdateName { get; set; }
-        public DateTime? UpdateTime { get; set; }
         public bool IsDelete { get; set; }
         public int Sort { get; set; }
     }

@@ -29,5 +29,9 @@ namespace Hiywin.Entities.Frame
         string UpdateName { get; set; }
         DateTime? UpdateTime { get; set; }
         string IsDelete { get; set; }
+        string StaffNo { get; set; }
+        string CompanyNo { get; set; }
+        bool IsAdmin { get; set; }
+        string AdAccount { get; set; }
     }
 }

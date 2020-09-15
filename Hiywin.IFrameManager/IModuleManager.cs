@@ -10,7 +10,22 @@ namespace Hiywin.IFrameManager
         /// <summary>
         /// 获取全部模块列表
         /// </summary>
+        /// <param name="query"></param>
         /// <returns></returns>
         Task<ListResult<ISysModuleModel>> GetModluleAllAsync(QueryData<SysModuleQuery> query);
+
+        /// <summary>
+        /// 分页获取模块列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ListResult<ISysModuleModel>> GetModlulePageAsync(QueryData<SysModuleQuery> query);
+
+        /// <summary>
+        /// 新增或更新模块信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> ModuleSaveOrUpdateAsync(QueryData<SysModuleSaveOrUpdateQuery> query);
     }
 }

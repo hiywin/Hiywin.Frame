@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Hiywin.IFrameManager\Hiywin.IFrameManager.csproj" />
     <ProjectReference Include="..\Hiywin.IFrameService\Hiywin.IFrameService.csproj" />
-    <ProjectReference Include="..\Hiywin.Models\Hiywin.Models.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

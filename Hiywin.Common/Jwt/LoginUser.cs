@@ -10,5 +10,6 @@ namespace Hiywin.Common.Jwt
         public string UserName { get; set; }
         public string AdAccount { get; set; }
         public bool IsAdmin { get; set; }
+        public string StaffNo { get; set; }
     }
 }

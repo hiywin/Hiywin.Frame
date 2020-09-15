@@ -24,10 +24,14 @@ namespace Hiywin.IFrameService.Structs
         public bool Access { get; set; }
         public string Creator { get; set; }
         public string CreateName { get; set; }
-        public DateTime CreateTime { get; set; }
+        public DateTime? CreateTime { get; set; }
         public string Updator { get; set; }
         public string UpdateName { get; set; }
         public DateTime? UpdateTime { get; set; }
         public string IsDelete { get; set; }
+        public string StaffNo { get; set; }
+        public string CompanyNo { get; set; }
+        public bool IsAdmin { get; set; }
+        public string AdAccount { get; set; }
     }
 }

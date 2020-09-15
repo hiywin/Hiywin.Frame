@@ -67,5 +67,94 @@ namespace Hiywin.FrameService
 
             return lr;
         }
+
+        public async Task<DataResult<List<ISysModuleModel>>> GetModulesPageAsync(QueryData<SysModuleQuery> query)
+        {
+            var lr = new DataResult<List<ISysModuleModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "ModuleNo = @ModuleNo", query.Criteria.ModuleNo);
+            StringHelper.ParameterAdd(builder, "ModuleName = @ModuleName", query.Criteria.ModuleName);
+            StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
+            StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.IsParentNo);
+            StringHelper.ParameterAdd(builder, "App = @App", query.Criteria.App);
+
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort " +
+                "from sys_module"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryPageAsync<SysModuleModel>(dbConn, "App asc,Sort asc", sql, query.PageModel, query.Criteria);
+                    lr.Data = modelList.ToList<ISysModuleModel>();
+                    lr.PageInfo = query.PageModel;
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -101);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
+        public async Task<DataResult<int>> ModuleSaveOrUpdateAsync(QueryData<SysModuleSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_module(ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Sort,IsDelete)
+                values(@ModuleNo,@ModuleName,@ParentNo,@Icon,@Url,@Category,@Target,@IsResource,@App,@Creator,@CreateName,@CreateTime,@Sort,@IsDelete)";
+            string sqlu = @"update sys_module set ModuleName=@ModuleName,ParentNo=@ParentNo,Icon=@Icon,Url=@Url,Category=@Category,Target=@Target,IsResource=@IsResource,
+                App=@App,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,Sort=@Sort,IsDelete=@IsDelete
+                where ModuleNo=@ModuleNo";
+            string sqlc = @"select Id from sys_module where ModuleNo=@ModuleNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                try
+                {
+                    // 新增
+                    if (string.IsNullOrEmpty(query.Criteria.ModuleNo))
+                    {
+                        query.Criteria.ModuleNo = Guid.NewGuid().ToString("N");
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, query.Criteria);
+                        if (result.Data < 0)
+                        {
+                            result.SetErr("新增模块信息失败！", -101);
+                            return result;
+                        }
+                    }
+                    else // 更新
+                    {
+                        result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("模块不存在或已被删除，请重试！", -101);
+                            return result;
+                        }
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqlu, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("更新模块信息失败！", -101);
+                            return result;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
     }
 }

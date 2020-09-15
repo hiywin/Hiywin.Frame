@@ -29,6 +29,7 @@ namespace Hiywin.Common.Jwt
                 identity.FindFirst("userName"),
                 identity.FindFirst("adAccount"),
                 identity.FindFirst("isAdmin"),
+                identity.FindFirst("staffNo")
             };
 
             //Create the JWT security token and encode it.
@@ -59,6 +60,7 @@ namespace Hiywin.Common.Jwt
             claimsIdentity.AddClaim(new Claim("userName", user.UserName));
             claimsIdentity.AddClaim(new Claim("adAccount", user.AdAccount));
             claimsIdentity.AddClaim(new Claim("isAdmin", user.IsAdmin.ToString()));
+            claimsIdentity.AddClaim(new Claim("staffNo", user.StaffNo));
 
             return claimsIdentity;
         }

@@ -8,6 +8,9 @@ namespace Hiywin.IFrameService.Structs
     {
         public string ModuleNo { get; set; }
         public string ModuleName { get; set; }
+        public string ParentNo { get; set; }
+        public bool? IsParentNo { get; set; }
+        public int? App { get; set; }
         public bool? IsDelete { get; set; }
         public DateTime? StarTime { get; set; }
         public DateTime? EndTime { get; set; }

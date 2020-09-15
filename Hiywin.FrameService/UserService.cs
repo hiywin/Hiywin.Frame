@@ -26,13 +26,16 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "UserName = @UserName", query.Criteria.UserName);
             StringHelper.ParameterAdd(builder, "Pwd = @Pwd", query.Criteria.Pwd);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
+            StringHelper.ParameterAdd(builder, "StaffNo = @StaffNo", query.Criteria.StaffNo);
+            StringHelper.ParameterAdd(builder, "AdAccount = @AdAccount", query.Criteria.AdAccount);
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
             string sql = @"select Id,UserNo,UserName,Pwd,Mobile,Email,Icon,App,RegisterTime,ApprovedBy,ApprovedTime,Descr,RejectedBy,
-                RejectedTime,RejectedReason,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete 
+                RejectedTime,RejectedReason,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,StaffNo,CompanyNo,
+                IsAdmin,AdAccount
                 from sys_user"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -56,10 +59,12 @@ namespace Hiywin.FrameService
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_user(UserNo,UserName,Pwd,Mobile,Email,Icon,App,RegisterTime,Access,Creator,CreateName,CreateTime)
-                values(@UserNo,@UserName,@Pwd,@Mobile,@Email,@Icon,@App,@RegisterTime,@Access,@Creator,@CreateName,@CreateTime)";
-            string sqlu = @"update sys_user set UserName=@UserName,Pwd=@Pwd,Mobile=@Mobile,Mobile=@Mobile,Icon=@Icon,App=@App,RegisterTime=@RegisterTime,
-                Access=@Access,Creator=@Creator,CreateName=@CreateName,CreateTime=@CreateTime
+            string sqli = @"insert into sys_user(UserNo,UserName,Pwd,Mobile,Email,Icon,App,RegisterTime,Access,Creator,CreateName,CreateTime,StaffNo,AdAccount)
+                values(@UserNo,@UserName,@Pwd,@Mobile,@Email,@Icon,@App,@RegisterTime,@Access,@Creator,@CreateName,@CreateTime,@StaffNo,@AdAccount)";
+            string sqlu = @"update sys_user set UserName=@UserName,Pwd=@Pwd,Mobile=@Mobile,Email=@Email,Icon=@Icon,App=@App,ApprovedBy=@ApprovedBy,
+                ApprovedTime=@ApprovedTime,Descr=@Descr,RejectedBy=@RejectedBy,RejectedTime=@RejectedTime,RejectedReason=@RejectedReason,
+                Access=@Access,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,StaffNo=@StaffNo,CompanyNo=@CompanyNo,IsDelete=@IsDelete,
+                IsAdmin=@IsAdmin,AdAccount=@AdAccount
                 where UserNo=@UserNo";
             string sqlc = @"select Id from sys_user where UserName=@UserName";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
