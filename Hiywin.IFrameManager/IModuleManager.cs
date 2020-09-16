@@ -27,5 +27,12 @@ namespace Hiywin.IFrameManager
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ErrData<bool>> ModuleSaveOrUpdateAsync(QueryData<SysModuleSaveOrUpdateQuery> query);
+
+        /// <summary>
+        /// 删除模块信息（IsDelete=true为软删除，IsDelete=false为物理删除）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> ModuleDeleteAsync(QueryData<SysModuleDeleteQuery> query);
     }
 }

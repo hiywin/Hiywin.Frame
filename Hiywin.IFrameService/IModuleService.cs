@@ -28,5 +28,12 @@ namespace Hiywin.IFrameService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<int>> ModuleSaveOrUpdateAsync(QueryData<SysModuleSaveOrUpdateQuery> query);
+
+        /// <summary>
+        /// 删除模块
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> ModuleDeleteAsync(QueryData<SysModuleDeleteQuery> query);
     }
 }

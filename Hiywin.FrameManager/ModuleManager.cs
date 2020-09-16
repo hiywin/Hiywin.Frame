@@ -90,7 +90,26 @@ namespace Hiywin.FrameManager
             }
             else
             {
-                result.SetInfo(true, "新增模块成功！", 200);
+                result.SetInfo(true, res.ErrMsg, 200);
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ErrData<bool>> ModuleDeleteAsync(QueryData<SysModuleDeleteQuery> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            var res = await _service.ModuleDeleteAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(false, res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                result.SetInfo(true, "删除成功！", 200);
             }
 
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;

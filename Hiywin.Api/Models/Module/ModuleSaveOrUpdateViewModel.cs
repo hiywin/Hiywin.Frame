@@ -18,5 +18,6 @@ namespace Hiywin.Api.Models.Module
         public int App { get; set; }
         public bool IsDelete { get; set; }
         public int Sort { get; set; }
+        public string RouterName { get; set; }
     }
 }

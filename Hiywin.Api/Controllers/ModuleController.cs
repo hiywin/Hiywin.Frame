@@ -23,6 +23,11 @@ namespace Hiywin.Api.Controllers
             _manager = IoCContainer.Resolve<IModuleManager>();
         }
 
+        /// <summary>
+        /// 分页获取模块列表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize,HttpPost,Route("get_modules_page")]
         public async Task<ActionResult> GetModulesPageAsync(GetModulePageViewModel model)
         {
@@ -45,6 +50,34 @@ namespace Hiywin.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// 分页获取模块列表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost, Route("get_modules_all")]
+        public async Task<ActionResult> GetModulesAllAsync(GetModuleAllViewModel model)
+        {
+            var query = new QueryData<SysModuleQuery>()
+            {
+                Criteria = new SysModuleQuery()
+                {
+                    ModuleNo = model.ModuleNo,
+                    ModuleName = model.ModuleName,
+                    IsDelete = model.IsDelete
+                }
+            };
+
+            var result = await _manager.GetModluleAllAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 新增或修改模块信息（ModuleNo为空时新增，不为空时修改）
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize,HttpPost,Route("module_save_or_update")]
         public async Task<ActionResult> ModuleSaveOrUpdateAsync(ModuleSaveOrUpdateViewModel model)
         {
@@ -62,7 +95,8 @@ namespace Hiywin.Api.Controllers
                     IsResource = model.IsResource,
                     App = model.App,
                     IsDelete = model.IsDelete,
-                    Sort = model.Sort
+                    Sort = model.Sort,
+                    RouterName = model.RouterName
                 },
                 Extend = new QueryExtend()
                 {
@@ -71,6 +105,27 @@ namespace Hiywin.Api.Controllers
                 }
             };
             var result = await _manager.ModuleSaveOrUpdateAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 删除模块信息（IsDelete=true为软删除，IsDelete=false为物理删除）
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize,HttpPost,Route("module_delete")]
+        public async Task<ActionResult> ModuleDeleteAsync(ModuleDeleteViewModel model)
+        {
+            var query = new QueryData<SysModuleDeleteQuery>()
+            {
+                Criteria = new SysModuleDeleteQuery()
+                {
+                    ModuleNo = model.ModuleNo,
+                    IsDelete = model.IsDelete
+                }
+            };
+            var result = await _manager.ModuleDeleteAsync(query);
 
             return Ok(result);
         }

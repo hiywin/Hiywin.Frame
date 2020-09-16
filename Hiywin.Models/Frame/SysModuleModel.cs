@@ -25,5 +25,6 @@ namespace Hiywin.Models.Frame
         public DateTime? UpdateTime { get; set; }
         public bool IsDelete { get; set; }
         public int Sort { get; set; }
+        public string RouterName { get; set; }
     }
 }

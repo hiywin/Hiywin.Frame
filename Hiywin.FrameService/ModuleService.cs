@@ -48,7 +48,7 @@ namespace Hiywin.FrameService
             }
             #endregion
 
-            string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort " +
+            string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName " +
                 "from sys_module"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -85,7 +85,7 @@ namespace Hiywin.FrameService
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort " +
+            string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName " +
                 "from sys_module"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -110,10 +110,10 @@ namespace Hiywin.FrameService
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_module(ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Sort,IsDelete)
-                values(@ModuleNo,@ModuleName,@ParentNo,@Icon,@Url,@Category,@Target,@IsResource,@App,@Creator,@CreateName,@CreateTime,@Sort,@IsDelete)";
+            string sqli = @"insert into sys_module(ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Sort,IsDelete,RouterName)
+                values(@ModuleNo,@ModuleName,@ParentNo,@Icon,@Url,@Category,@Target,@IsResource,@App,@Creator,@CreateName,@CreateTime,@Sort,@IsDelete,@RouterName)";
             string sqlu = @"update sys_module set ModuleName=@ModuleName,ParentNo=@ParentNo,Icon=@Icon,Url=@Url,Category=@Category,Target=@Target,IsResource=@IsResource,
-                App=@App,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,Sort=@Sort,IsDelete=@IsDelete
+                App=@App,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,Sort=@Sort,IsDelete=@IsDelete,RouterName=@RouterName
                 where ModuleNo=@ModuleNo";
             string sqlc = @"select Id from sys_module where ModuleNo=@ModuleNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
@@ -125,10 +125,14 @@ namespace Hiywin.FrameService
                     {
                         query.Criteria.ModuleNo = Guid.NewGuid().ToString("N");
                         result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, query.Criteria);
-                        if (result.Data < 0)
+                        if (result.Data <= 0)
                         {
                             result.SetErr("新增模块信息失败！", -101);
                             return result;
+                        }
+                        else
+                        {
+                            result.SetErr("新增模块信息成功！", 200);
                         }
                     }
                     else // 更新
@@ -143,6 +147,53 @@ namespace Hiywin.FrameService
                         if (result.Data <= 0)
                         {
                             result.SetErr("更新模块信息失败！", -101);
+                            return result;
+                        }
+                        result.SetErr("更新模块信息成功！", 200);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> ModuleDeleteAsync(QueryData<SysModuleDeleteQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqld = @"delete from sys_module where ModuleNo=@ModuleNo";
+            string sqlu = @"update sys_module set IsDelete=@IsDelete where ModuleNo=@ModuleNo";
+            string sqlc = @"select Id from sys_module where ModuleNo=@ModuleNo";
+            using (IDbConnection dbConn=MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                try
+                {
+                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("模块不存在或已被删除，请重试！", -101);
+                        return result;
+                    }
+                    if (query.Criteria.IsDelete)
+                    {
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqlu, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("删除失败！", -101);
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("删除失败！", -101);
                             return result;
                         }
                     }
