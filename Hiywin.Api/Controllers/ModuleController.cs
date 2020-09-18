@@ -51,7 +51,7 @@ namespace Hiywin.Api.Controllers
         }
 
         /// <summary>
-        /// 分页获取模块列表
+        /// 全部获取模块列表
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -64,7 +64,10 @@ namespace Hiywin.Api.Controllers
                 {
                     ModuleNo = model.ModuleNo,
                     ModuleName = model.ModuleName,
-                    IsDelete = model.IsDelete
+                    IsDelete = model.IsDelete,
+                    App = model.App,
+                    ParentNo = model.ParentNo,
+                    IsParentNo = model.IsParentNo
                 }
             };
 

@@ -22,13 +22,6 @@ namespace Hiywin.FrameManager
             var lr = new ListResult<ISysModuleModel>();
             var dt = DateTime.Now;
 
-            var queryEx = new QueryData<SysModuleQuery>()
-            {
-                Criteria = new SysModuleQuery()
-                {
-                    IsDelete = false
-                }
-            };
             var res = await _service.GetModulesAllAsync(query);
             if (res.HasErr)
             {
