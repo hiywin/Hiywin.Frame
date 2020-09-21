@@ -1,9 +1,12 @@
 ﻿using Hiywin.Common.Data;
+using Hiywin.Dtos.Frame;
+using Hiywin.Dtos.Structs;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService;
 using Hiywin.IFrameService.Structs;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hiywin.FrameManager
@@ -17,7 +20,7 @@ namespace Hiywin.FrameManager
             _service = service;
         }
 
-        public async Task<ListResult<ISysModuleModel>> GetModluleAllAsync(QueryData<SysModuleQuery> query)
+        public async Task<ListResult<ISysModuleModel>> GetModuleAllAsync(QueryData<SysModuleQuery> query)
         {
             var lr = new ListResult<ISysModuleModel>();
             var dt = DateTime.Now;
@@ -40,7 +43,7 @@ namespace Hiywin.FrameManager
             return lr;
         }
 
-        public async Task<ListResult<ISysModuleModel>> GetModlulePageAsync(QueryData<SysModuleQuery> query)
+        public async Task<ListResult<ISysModuleModel>> GetModulePageAsync(QueryData<SysModuleQuery> query)
         {
             var lr = new ListResult<ISysModuleModel>();
             var dt = DateTime.Now;
@@ -107,6 +110,87 @@ namespace Hiywin.FrameManager
 
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return result;
+        }
+
+        public async Task<ListResult<SysModuleTreeDto>> GetModuleTreeAsync(QueryData<SysModuleTreeQuery> query)
+        {
+            var lr = new ListResult<SysModuleTreeDto>();
+            var dt = DateTime.Now;
+
+            var queryAll = new QueryData<SysModuleQuery>()
+            {
+                Criteria = new SysModuleQuery()
+                {
+                    ParentNo = string.Empty,
+                    IsParentNo = null,
+                    IsDelete = false,
+                    App = query.Criteria.App
+                }
+            };
+            var resAll = await GetModuleAllAsync(queryAll);
+            if (resAll.HasErr)
+            {
+                lr.SetInfo("获取父模块列表失败，请重试！", -201);
+            }
+            else
+            {
+                var resParent = resAll.Results.FindAll(p => p.ParentNo == string.Empty);
+                if (!string.IsNullOrEmpty(query.Criteria.ModuleName))
+                {
+                    resParent = resParent.FindAll(p => p.ModuleName.Contains(query.Criteria.ModuleName));
+                }
+                foreach (var parentModule in resParent)
+                {
+                    var module = new SysModuleTreeDto();
+                    module.ModuleNo = parentModule.ModuleNo;
+                    module.ModuleName = parentModule.ModuleName;
+                    module.ParentNo = parentModule.ParentNo;
+                    module.Icon = parentModule.Icon;
+                    module.App = parentModule.App;
+                    module.Sort = parentModule.Sort;
+                    module.IsDelete = parentModule.IsDelete;
+
+                    var childrenModules = GetModuleByParentSync(module, resAll);
+                    if (childrenModules.Count > 0)
+                    {
+                        module.Children = childrenModules;
+                    }
+
+                    lr.Results.Add(module);
+                }
+                lr.SetInfo("获取模块树成功！", 200);
+            }
+
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
+        }
+
+        private List<SysModuleTreeDto> GetModuleByParentSync(SysModuleTreeDto parentModule, ListResult<ISysModuleModel> resAll)
+        {
+            var lr = new List<SysModuleTreeDto>();
+
+            var  resChildren = resAll.Results.FindAll(p => p.ParentNo == parentModule.ModuleNo);
+            foreach (var childrenModule in resChildren)
+            {
+                var module = new SysModuleTreeDto();
+                module.ModuleNo = childrenModule.ModuleNo;
+                module.ModuleName = childrenModule.ModuleName;
+                module.ParentNo = childrenModule.ParentNo;
+                module.Icon = childrenModule.Icon;
+                module.App = childrenModule.App;
+                module.Sort = childrenModule.Sort;
+                module.IsDelete = childrenModule.IsDelete;
+
+                var childrenModules = GetModuleByParentSync(module, resAll);
+                if (childrenModules.Count > 0)
+                {
+                    module.Children = childrenModules;
+                }
+
+                lr.Add(module);
+            }
+
+            return lr;
         }
     }
 }

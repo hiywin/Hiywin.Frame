@@ -39,7 +39,7 @@ namespace Hiywin.FrameService
             string sqlCondition = string.Empty;
 
             StringHelper.ParameterAdd(builder, "ModuleNo = @ModuleNo", query.Criteria.ModuleNo);
-            StringHelper.ParameterAdd(builder, "ModuleName = @ModuleName", query.Criteria.ModuleName);
+            StringHelper.ParameterAdd(builder, "ModuleName like concat('%',@ModuleName,'%')", query.Criteria.ModuleName);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
             StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.IsParentNo);
             StringHelper.ParameterAdd(builder, "App = @App", query.Criteria.App);

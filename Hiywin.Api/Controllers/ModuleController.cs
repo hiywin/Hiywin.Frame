@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hiywin.Api.Models.Module;
 using Hiywin.Common.Data;
 using Hiywin.Common.IoC;
+using Hiywin.Dtos.Structs;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService.Structs;
 using Microsoft.AspNetCore.Authorization;
@@ -45,7 +46,7 @@ namespace Hiywin.Api.Controllers
                 PageModel = model.PageModel
             };
 
-            var result = await _manager.GetModlulePageAsync(query);
+            var result = await _manager.GetModulePageAsync(query);
 
             return Ok(result);
         }
@@ -71,9 +72,25 @@ namespace Hiywin.Api.Controllers
                 }
             };
 
-            var result = await _manager.GetModluleAllAsync(query);
+            var result = await _manager.GetModuleAllAsync(query);
 
             return Ok(result);
+        }
+
+        [Authorize,HttpPost,Route("get_modules_tree")]
+        public async Task<ActionResult> GetModulesTreeAsync(GetModuleTreeViewModel model)
+        {
+            var query = new QueryData<SysModuleTreeQuery>()
+            {
+                Criteria = new SysModuleTreeQuery()
+                {
+                    App = model.App,
+                    ModuleName = model.ModuleName
+                }
+            };
+            var res = await _manager.GetModuleTreeAsync(query);
+
+            return Ok(res);
         }
 
         /// <summary>
