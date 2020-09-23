@@ -50,8 +50,9 @@ namespace Hiywin.FrameService
             }
             #endregion
 
-            string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName " +
-                "from sys_module"
+            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
+                (select count(Id) from sys_module where ParentNo=a.ModuleNo) ChildrenCount
+                from sys_module a"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
             {
@@ -87,8 +88,9 @@ namespace Hiywin.FrameService
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = "select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName " +
-                "from sys_module"
+            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
+                (select count(Id) from sys_module where ParentNo=a.ModuleNo) ChildrenCount
+                from sys_module a"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
             {

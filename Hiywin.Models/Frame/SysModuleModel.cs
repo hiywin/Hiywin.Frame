@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hiywin.Models.Frame
 {
-    public class SysModuleModel: ISysModuleModel
+    public class SysModuleModel : ISysModuleModel
     {
         public int Id { get; set; }
         public string ModuleNo { get; set; }
@@ -26,5 +26,20 @@ namespace Hiywin.Models.Frame
         public bool IsDelete { get; set; }
         public int Sort { get; set; }
         public string RouterName { get; set; }
+        public int ChildrenCount { get; set; }
+        public bool HasChildren
+        {
+            get
+            {
+                if (ChildrenCount > 0)
+                    return true;
+                else
+                    return false;
+            }
+            set
+            {
+                this.HasChildren = value;
+            }
+        }
     }
 }

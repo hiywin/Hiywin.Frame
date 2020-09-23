@@ -25,5 +25,7 @@ namespace Hiywin.Entities.Frame
         DateTime? UpdateTime { get; set; }
         bool IsDelete { get; set; }
         string RouterName { get; set; }
+        int ChildrenCount { get; set; }
+        bool HasChildren { get; set; }
     }
 }
