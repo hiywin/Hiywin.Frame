@@ -64,7 +64,7 @@ namespace Hiywin.Common.Helpers
                         }
                         break;
                     case "Int32":
-                        if ((int)paramValue > 0)
+                        if ((int)paramValue >= 0)
                         {
                             if (builder.Length > 0) builder.AppendLine(condition);
                             builder.AppendLine(formater);

@@ -41,7 +41,7 @@ namespace Hiywin.Api.Controllers
                     ParentNo = model.ParentNo,
                     App = model.App,
                     IsDelete = model.IsDelete,
-                    IsParentNo = true,
+                    IsParentNo = model.IsParentNo,
                 },
                 PageModel = model.PageModel
             };
