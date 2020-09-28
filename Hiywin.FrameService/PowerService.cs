@@ -31,7 +31,7 @@ namespace Hiywin.FrameService
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select Id,PowerNo,ModuleNo,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete 
+            string sql = @"select Id,PowerNo,ModuleNo,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,IsPlain,IsRound,IsCircle
                 from sys_power"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -66,7 +66,7 @@ namespace Hiywin.FrameService
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select Id,PowerNo,ModuleNo,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete 
+            string sql = @"select Id,PowerNo,ModuleNo,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,IsPlain,IsRound,IsCircle
                 from sys_power"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -91,10 +91,10 @@ namespace Hiywin.FrameService
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_power(PowerNo,ModuleNo,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,IsDelete)
-                values(@PowerNo,@ModuleNo,@Content,@Type,@Style,@FuncName,@Icon,@Sort,@Access,@Creator,@CreateName,@CreateTime,@IsDelete)";
+            string sqli = @"insert into sys_power(PowerNo,ModuleNo,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,IsDelete,IsPlain,IsRound,IsCircle)
+                values(@PowerNo,@ModuleNo,@Content,@Type,@Style,@FuncName,@Icon,@Sort,@Access,@Creator,@CreateName,@CreateTime,@IsDelete,@IsPlain,@IsRound,@IsCircle)";
             string sqlu = @"update sys_power set ModuleNo=@ModuleNo,Content=@Content,Type=@Type,Style=@Style,FuncName=@FuncName,Icon=@Icon,Sort=@Sort,Access=@Access,
-                Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete
+                Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete,IsPlain=@IsPlain,IsRound=@IsRound,IsCircle=@IsCircle
                 where PowerNo=@PowerNo";
             string sqlc = @"select Id from sys_power where PowerNo=@PowerNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))

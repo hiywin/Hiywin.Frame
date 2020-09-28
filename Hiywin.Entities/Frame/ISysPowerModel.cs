@@ -23,5 +23,8 @@ namespace Hiywin.Entities.Frame
         string UpdateName { get; set; }
         DateTime? UpdateTime { get; set; }
         bool IsDelete { get; set; }
+        bool IsPlain { get; set; }
+        bool IsRound { get; set; }
+        bool IsCircle { get; set; }
     }
 }

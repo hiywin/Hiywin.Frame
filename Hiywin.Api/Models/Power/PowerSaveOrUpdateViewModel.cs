@@ -21,5 +21,8 @@ namespace Hiywin.Api.Models.Power
         public bool Access { get; set; }
         [Required]
         public bool IsDelete { get; set; }
+        public bool IsPlain { get; set; }
+        public bool IsRound { get; set; }
+        public bool IsCircle { get; set; }
     }
 }

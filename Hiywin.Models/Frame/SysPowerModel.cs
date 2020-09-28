@@ -24,5 +24,8 @@ namespace Hiywin.Models.Frame
         public string UpdateName { get; set; }
         public DateTime? UpdateTime { get; set; }
         public bool IsDelete { get; set; }
+        public bool IsPlain { get; set; }
+        public bool IsRound { get; set; }
+        public bool IsCircle { get; set; }
     }
 }

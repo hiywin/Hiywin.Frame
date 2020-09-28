@@ -74,7 +74,10 @@ namespace Hiywin.Api.Controllers
                     Icon = model.Icon,
                     Sort = model.Sort,
                     Access = model.Access,
-                    IsDelete = model.IsDelete
+                    IsDelete = model.IsDelete,
+                    IsPlain = model.IsPlain,
+                    IsRound = model.IsRound,
+                    IsCircle = model.IsCircle
                 },
                 Extend = new QueryExtend()
                 {
