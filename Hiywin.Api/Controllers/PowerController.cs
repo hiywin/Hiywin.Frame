@@ -67,6 +67,7 @@ namespace Hiywin.Api.Controllers
                 {
                     PowerNo = model.PowerNo,
                     ModuleNo = model.ModuleNo,
+                    PowerID = model.PowerID,
                     Content = model.Content,
                     Type = model.Type,
                     Style = model.Style,

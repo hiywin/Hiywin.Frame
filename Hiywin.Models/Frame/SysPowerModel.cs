@@ -10,6 +10,7 @@ namespace Hiywin.Models.Frame
         public int Id { get; set; }
         public string PowerNo { get; set; }
         public string ModuleNo { get; set; }
+        public string PowerID { get; set; }
         public string Content { get; set; }
         public string Type { get; set; }
         public string Style { get; set; }

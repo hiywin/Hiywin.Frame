@@ -11,6 +11,9 @@ namespace Hiywin.Api.Models.Power
         public string PowerNo { get; set; }
         [Required]
         public string ModuleNo { get; set; }
+        [Required]
+        public string PowerID { get; set; }
+        [Required]
         public string Content { get; set; }
         public string Type { get; set; }
         public string Style { get; set; }

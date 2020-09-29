@@ -9,6 +9,7 @@ namespace Hiywin.Entities.Frame
         int Id { get; set; }
         string PowerNo { get; set; }
         string ModuleNo { get; set; }
+        string PowerID { get; set; }
         string Content { get; set; }
         string Type { get; set; }
         string Style { get; set; }
