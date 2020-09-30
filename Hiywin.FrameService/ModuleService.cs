@@ -63,7 +63,7 @@ namespace Hiywin.FrameService
                 }
                 catch (Exception ex)
                 {
-                    lr.SetErr(ex, -101);
+                    lr.SetErr(ex, -500);
                     lr.Data = null;
                 }
             }
@@ -102,7 +102,7 @@ namespace Hiywin.FrameService
                 }
                 catch (Exception ex)
                 {
-                    lr.SetErr(ex, -101);
+                    lr.SetErr(ex, -500);
                     lr.Data = null;
                 }
             }

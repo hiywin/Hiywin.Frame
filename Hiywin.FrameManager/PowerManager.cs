@@ -12,7 +12,7 @@ namespace Hiywin.FrameManager
 {
     public class PowerManager : IPowerManager
     {
-        IPowerService _service;
+        private readonly IPowerService _service;
         public PowerManager(IPowerService service)
         {
             _service = service;

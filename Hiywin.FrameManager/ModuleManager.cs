@@ -13,7 +13,7 @@ namespace Hiywin.FrameManager
 {
     public class ModuleManager : IModuleManager
     {
-        IModuleService _service;
+        private readonly IModuleService _service;
 
         public ModuleManager(IModuleService service)
         {

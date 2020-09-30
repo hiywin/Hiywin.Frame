@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace Hiywin.FrameManager
 {
-    public class DictionaryManager : IDictionaryManager
+    public class CompanyManager : ICompanyManager
     {
-        private readonly IDictionaryService _service;
-        public DictionaryManager(IDictionaryService service)
+        private readonly ICompanyService _service;
+        public CompanyManager(ICompanyService service)
         {
             _service = service;
         }
 
-        public async Task<ListResult<ISysDictionaryModel>> GetDictionaryAllAsync(QueryData<SysDictionaryQuery> query)
+        public async Task<ListResult<ISysCompanyModel>> GetCompanyAllAsync(QueryData<SysCompanyQuery> query)
         {
-            var lr = new ListResult<ISysDictionaryModel>();
+            var lr = new ListResult<ISysCompanyModel>();
             var dt = DateTime.Now;
 
-            var res = await _service.GetDictionaryAllAsync(query);
+            var res = await _service.GetCompanysAllAsync(query);
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);
@@ -41,7 +41,31 @@ namespace Hiywin.FrameManager
             return lr;
         }
 
-        public async Task<ErrData<bool>> DictionarySaveOrUpdateAsync(QueryData<SysDictionarySaveOrUpdateQuery> query)
+        public async Task<ListResult<ISysCompanyModel>> GetCompanyPageAsync(QueryData<SysCompanyQuery> query)
+        {
+            var lr = new ListResult<ISysCompanyModel>();
+            var dt = DateTime.Now;
+
+            var res = await _service.GetCompanysPageAsync(query);
+            if (res.HasErr)
+            {
+                lr.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                foreach (var item in res.Data)
+                {
+                    lr.Results.Add(item);
+                }
+                lr.PageModel = res.PageInfo;
+                lr.SetInfo("成功", 200);
+            }
+
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
+        }
+
+        public async Task<ErrData<bool>> CompanySaveOrUpdateAsync(QueryData<SysCompanySaveOrUpdateQuery> query)
         {
             var result = new ErrData<bool>();
             var dt = DateTime.Now;
@@ -53,7 +77,7 @@ namespace Hiywin.FrameManager
             query.Criteria.UpdateName = query.Extend.UserName;
             query.Criteria.UpdateTime = DateTime.Now;
 
-            var res = await _service.DictionarySaveOrUpdateAsync(query);
+            var res = await _service.CompanySaveOrUpdateAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(false, res.ErrMsg, res.ErrCode);
@@ -67,12 +91,12 @@ namespace Hiywin.FrameManager
             return result;
         }
 
-        public async Task<ErrData<bool>> DictionaryDeleteAsync(QueryData<SysDictionaryDeleteQuery> query)
+        public async Task<ErrData<bool>> CompanyDeleteAsync(QueryData<SysCompanyDeleteQuery> query)
         {
             var result = new ErrData<bool>();
             var dt = DateTime.Now;
 
-            var res = await _service.DictionaryDeleteAsync(query);
+            var res = await _service.CompanyDeleteAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(false, res.ErrMsg, res.ErrCode);

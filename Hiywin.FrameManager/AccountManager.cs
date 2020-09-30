@@ -13,7 +13,7 @@ namespace Hiywin.FrameManager
 {
     public class AccountManager : IAccountManager
     {
-        IUserService _service;
+        private readonly IUserService _service;
         public AccountManager(IUserService service)
         {
             _service = service;

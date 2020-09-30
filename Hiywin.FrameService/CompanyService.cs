@@ -14,32 +14,37 @@ using System.Threading.Tasks;
 
 namespace Hiywin.FrameService
 {
-    public class PowerService : IPowerService
+    public class CompanyService : ICompanyService
     {
-        public async Task<DataResult<List<ISysPowerModel>>> GetPowersAllAsync(QueryData<SysPowerQuery> query)
+        public async Task<DataResult<List<ISysCompanyModel>>> GetCompanysAllAsync(QueryData<SysCompanyQuery> query)
         {
-            var lr = new DataResult<List<ISysPowerModel>>();
+            var lr = new DataResult<List<ISysCompanyModel>>();
 
             StringBuilder builder = new StringBuilder();
             string sqlCondition = string.Empty;
 
-            StringHelper.ParameterAdd(builder, "PowerNo = @PowerNo", query.Criteria.PowerNo);
-            StringHelper.ParameterAdd(builder, "ModuleNo = @ModuleNo", query.Criteria.ModuleNo);
+            StringHelper.ParameterAdd(builder, "CompanyNo = @CompanyNo", query.Criteria.CompanyNo);
+            StringHelper.ParameterAdd(builder, "CompanyName like concat('%',@CompanyName,'%')", query.Criteria.CompanyName);
+            StringHelper.ParameterAdd(builder, "Address like concat('%',@Address,'%')", query.Criteria.Address);
+            StringHelper.ParameterAdd(builder, "Mobile like concat('%',@Mobile,'%')", query.Criteria.Mobile);
+            StringHelper.ParameterAdd(builder, "Industry like concat('%',@Industry,'%')", query.Criteria.Industry);
+            StringHelper.ParameterAdd(builder, "LegalPerson like concat('%',@LegalPerson,'%')", query.Criteria.LegalPerson);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select Id,PowerNo,ModuleNo,PowerID,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,IsPlain,IsRound,IsCircle
-                from sys_power"
+            string sql = @"select Id,CompanyNo,CompanyName,Abbreviation,Address,Industry,LegalPerson,Contact,Phone,Mobile,Email,Website,Access,
+                Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete
+                from sys_company"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
             {
                 try
                 {
-                    var modelList = await MysqlHelper.QueryListAsync<SysPowerModel>(dbConn, sql, "Sort asc", query.Criteria);
-                    lr.Data = modelList.ToList<ISysPowerModel>();
+                    var modelList = await MysqlHelper.QueryListAsync<SysCompanyModel>(dbConn, sql, "Id desc", query.Criteria);
+                    lr.Data = modelList.ToList<ISysCompanyModel>();
                 }
                 catch (Exception ex)
                 {
@@ -51,30 +56,35 @@ namespace Hiywin.FrameService
             return lr;
         }
 
-        public async Task<DataResult<List<ISysPowerModel>>> GetPowersPageAsync(QueryData<SysPowerQuery> query)
+        public async Task<DataResult<List<ISysCompanyModel>>> GetCompanysPageAsync(QueryData<SysCompanyQuery> query)
         {
-            var lr = new DataResult<List<ISysPowerModel>>();
+            var lr = new DataResult<List<ISysCompanyModel>>();
 
             StringBuilder builder = new StringBuilder();
             string sqlCondition = string.Empty;
 
-            StringHelper.ParameterAdd(builder, "PowerNo = @PowerNo", query.Criteria.PowerNo);
-            StringHelper.ParameterAdd(builder, "ModuleNo = @ModuleNo", query.Criteria.ModuleNo);
+            StringHelper.ParameterAdd(builder, "CompanyNo = @CompanyNo", query.Criteria.CompanyNo);
+            StringHelper.ParameterAdd(builder, "CompanyName like concat('%',@CompanyName,'%')", query.Criteria.CompanyName);
+            StringHelper.ParameterAdd(builder, "Address like concat('%',@Address,'%')", query.Criteria.Address);
+            StringHelper.ParameterAdd(builder, "Mobile like concat('%',@Mobile,'%')", query.Criteria.Mobile);
+            StringHelper.ParameterAdd(builder, "Industry like concat('%',@Industry,'%')", query.Criteria.Industry);
+            StringHelper.ParameterAdd(builder, "LegalPerson like concat('%',@LegalPerson,'%')", query.Criteria.LegalPerson);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select Id,PowerNo,ModuleNo,PowerID,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,IsPlain,IsRound,IsCircle
-                from sys_power"
+            string sql = @"select Id,CompanyNo,CompanyName,Abbreviation,Address,Industry,LegalPerson,Contact,Phone,Mobile,Email,Website,Access,
+                Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete
+                from sys_company"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
             {
                 try
                 {
-                    var modelList = await MysqlHelper.QueryPageAsync<SysPowerModel>(dbConn, "Sort asc", sql, query.PageModel, query.Criteria);
-                    lr.Data = modelList.ToList<ISysPowerModel>();
+                    var modelList = await MysqlHelper.QueryPageAsync<SysCompanyModel>(dbConn, "Id desc", sql, query.PageModel, query.Criteria);
+                    lr.Data = modelList.ToList<ISysCompanyModel>();
                     lr.PageInfo = query.PageModel;
                 }
                 catch (Exception ex)
@@ -87,33 +97,33 @@ namespace Hiywin.FrameService
             return lr;
         }
 
-        public async Task<DataResult<int>> PowerSaveOrUpdateAsync(QueryData<SysPowerSaveOrUpdateQuery> query)
+        public async Task<DataResult<int>> CompanySaveOrUpdateAsync(QueryData<SysCompanySaveOrUpdateQuery> query)
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_power(PowerNo,ModuleNo,PowerID,Content,Type,Style,FuncName,Icon,Sort,Access,Creator,CreateName,CreateTime,IsDelete,IsPlain,IsRound,IsCircle)
-                values(@PowerNo,@ModuleNo,@PowerID,@Content,@Type,@Style,@FuncName,@Icon,@Sort,@Access,@Creator,@CreateName,@CreateTime,@IsDelete,@IsPlain,@IsRound,@IsCircle)";
-            string sqlu = @"update sys_power set ModuleNo=@ModuleNo,PowerID=@PowerID,Content=@Content,Type=@Type,Style=@Style,FuncName=@FuncName,Icon=@Icon,Sort=@Sort,Access=@Access,
-                Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete,IsPlain=@IsPlain,IsRound=@IsRound,IsCircle=@IsCircle
-                where PowerNo=@PowerNo";
-            string sqlc = @"select Id from sys_power where PowerNo=@PowerNo";
+            string sqli = @"insert into sys_company(CompanyNo,CompanyName,Abbreviation,Address,Industry,LegalPerson,Contact,Phone,Mobile,Email,Website,Access,Creator,CreateName,CreateTime,IsDelete)
+                values(@CompanyNo,@CompanyName,@Abbreviation,@Address,@Industry,@LegalPerson,@Contact,@Phone,@Mobile,@Email,@Website,@Access,@Creator,@CreateName,@CreateTime,@IsDelete)";
+            string sqlu = @"update sys_company set CompanyName=@CompanyName,Abbreviation=@Abbreviation,Address=@Address,Industry=@Industry,LegalPerson=@LegalPerson,Contact=@Contact,Phone=@Phone,
+                Mobile=@Mobile,Email=@Email,Website=@Website,Access=@Access,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete
+                where CompanyNo=@CompanyNo";
+            string sqlc = @"select Id from sys_company where CompanyNo=@CompanyNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
             {
                 try
                 {
                     // 新增
-                    if (string.IsNullOrEmpty(query.Criteria.PowerNo))
+                    if (string.IsNullOrEmpty(query.Criteria.CompanyNo))
                     {
-                        query.Criteria.PowerNo = Guid.NewGuid().ToString("N");
+                        query.Criteria.CompanyNo = Guid.NewGuid().ToString("N");
                         result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, query.Criteria);
                         if (result.Data <= 0)
                         {
-                            result.SetErr("新增按钮信息失败！", -101);
+                            result.SetErr("新增公司信息失败！", -101);
                             return result;
                         }
                         else
                         {
-                            result.SetErr("新增按钮信息成功！", 200);
+                            result.SetErr("新增公司信息成功！", 200);
                         }
                     }
                     else // 更新
@@ -121,16 +131,16 @@ namespace Hiywin.FrameService
                         result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
                         if (result.Data <= 0)
                         {
-                            result.SetErr("按钮不存在或已被删除，请重试！", -101);
+                            result.SetErr("公司不存在或已被删除，请重试！", -101);
                             return result;
                         }
                         result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqlu, query.Criteria);
                         if (result.Data <= 0)
                         {
-                            result.SetErr("更新按钮信息失败！", -101);
+                            result.SetErr("更新公司信息失败！", -101);
                             return result;
                         }
-                        result.SetErr("更新按钮信息成功！", 200);
+                        result.SetErr("更新公司信息成功！", 200);
                     }
                 }
                 catch (Exception ex)
@@ -143,13 +153,13 @@ namespace Hiywin.FrameService
             return result;
         }
 
-        public async Task<DataResult<int>> PowerDeleteAsync(QueryData<SysPowerDeleteQuery> query)
+        public async Task<DataResult<int>> CompanyDeleteAsync(QueryData<SysCompanyDeleteQuery> query)
         {
             var result = new DataResult<int>();
 
-            string sqld = @"delete from sys_power where PowerNo=@PowerNo";
-            string sqlu = @"update sys_power set IsDelete=@IsDelete where PowerNo=@PowerNo";
-            string sqlc = @"select Id from sys_power where PowerNo=@PowerNo";
+            string sqld = @"delete from sys_company where CompanyNo=@CompanyNo";
+            string sqlu = @"update sys_company set IsDelete=@IsDelete where CompanyNo=@CompanyNo";
+            string sqlc = @"select Id from sys_company where CompanyNo=@CompanyNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
             {
                 try
@@ -157,7 +167,7 @@ namespace Hiywin.FrameService
                     result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
                     if (result.Data <= 0)
                     {
-                        result.SetErr("按钮不存在或已被删除，请重试！", -101);
+                        result.SetErr("公司不存在或已被删除，请重试！", -101);
                         return result;
                     }
                     if (query.Criteria.IsDelete)
