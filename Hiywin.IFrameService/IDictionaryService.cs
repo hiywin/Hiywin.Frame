@@ -15,7 +15,14 @@ namespace Hiywin.IFrameService
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<DataResult<List<ISysDictionaryModel>>> GetDictionaryAllAsync(QueryData<SysDictionaryQuery> query);
+        Task<DataResult<List<ISysDictionaryModel>>> GetDictionarysAllAsync(QueryData<SysDictionaryQuery> query);
+
+        /// <summary>
+        /// 分页获取字典列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<ISysDictionaryModel>>> GetDictionarysPageAsync(QueryData<SysDictionaryQuery> query);
 
         /// <summary>
         /// 新增或修改字典项

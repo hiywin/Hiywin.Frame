@@ -23,7 +23,7 @@ namespace Hiywin.FrameManager
             var lr = new ListResult<ISysDictionaryModel>();
             var dt = DateTime.Now;
 
-            var res = await _service.GetDictionaryAllAsync(query);
+            var res = await _service.GetDictionarysAllAsync(query);
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);
@@ -34,6 +34,30 @@ namespace Hiywin.FrameManager
                 {
                     lr.Results.Add(item);
                 }
+                lr.SetInfo("成功", 200);
+            }
+
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
+        }
+
+        public async Task<ListResult<ISysDictionaryModel>> GetDictionaryPageAsync(QueryData<SysDictionaryQuery> query)
+        {
+            var lr = new ListResult<ISysDictionaryModel>();
+            var dt = DateTime.Now;
+
+            var res = await _service.GetDictionarysPageAsync(query);
+            if (res.HasErr)
+            {
+                lr.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                foreach (var item in res.Data)
+                {
+                    lr.Results.Add(item);
+                }
+                lr.PageModel = res.PageInfo;
                 lr.SetInfo("成功", 200);
             }
 

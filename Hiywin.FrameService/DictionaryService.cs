@@ -16,7 +16,7 @@ namespace Hiywin.FrameService
 {
     public class DictionaryService : IDictionaryService
     {
-        public async Task<DataResult<List<ISysDictionaryModel>>> GetDictionaryAllAsync(QueryData<SysDictionaryQuery> query)
+        public async Task<DataResult<List<ISysDictionaryModel>>> GetDictionarysAllAsync(QueryData<SysDictionaryQuery> query)
         {
             var lr = new DataResult<List<ISysDictionaryModel>>();
 
@@ -40,6 +40,42 @@ namespace Hiywin.FrameService
                 {
                     var modelList = await MysqlHelper.QueryListAsync<SysDictionaryModel>(dbConn, sql, "Id asc", query.Criteria);
                     lr.Data = modelList.ToList<ISysDictionaryModel>();
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
+        public async Task<DataResult<List<ISysDictionaryModel>>> GetDictionarysPageAsync(QueryData<SysDictionaryQuery> query)
+        {
+            var lr = new DataResult<List<ISysDictionaryModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "Type = @Type", query.Criteria.Type);
+            StringHelper.ParameterAdd(builder, "TypeName like concat('%',@TypeName,'%')", query.Criteria.TypeName);
+            StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
+
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,CompanyNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
+                " from sys_dictionary"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryPageAsync<SysDictionaryModel>(dbConn, "Id desc", sql, query.PageModel, query.Criteria);
+                    lr.Data = modelList.ToList<ISysDictionaryModel>();
+                    lr.PageInfo = query.PageModel;
                 }
                 catch (Exception ex)
                 {

@@ -12,6 +12,8 @@ namespace Hiywin.IFrameManager
     {
         Task<ListResult<ISysDictionaryModel>> GetDictionaryAllAsync(QueryData<SysDictionaryQuery> query);
 
+        Task<ListResult<ISysDictionaryModel>> GetDictionaryPageAsync(QueryData<SysDictionaryQuery> query);
+
         Task<ErrData<bool>> DictionarySaveOrUpdateAsync(QueryData<SysDictionarySaveOrUpdateQuery> query);
 
         Task<ErrData<bool>> DictionaryDeleteAsync(QueryData<SysDictionaryDeleteQuery> query);

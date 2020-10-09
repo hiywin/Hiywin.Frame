@@ -23,8 +23,8 @@ namespace Hiywin.Api.Controllers
             _manager = IoCContainer.Resolve<IDictionaryManager>();
         }
 
-        [Authorize,HttpPost,Route("get_dictionary_all")]
-        public async Task<ActionResult> GetDictionaryAllAsync(GetDictionaryAllViewModel model)
+        [Authorize,HttpPost,Route("get_dictionarys_all")]
+        public async Task<ActionResult> GetDictionarysAllAsync(GetDictionaryAllViewModel model)
         {
             var query = new QueryData<SysDictionaryQuery>()
             {
@@ -37,6 +37,24 @@ namespace Hiywin.Api.Controllers
             };
             var result = await _manager.GetDictionaryAllAsync(query);
 
+
+            return Ok(result);
+        }
+
+        [Authorize, HttpPost, Route("get_dictionarys_page")]
+        public async Task<ActionResult> GetDictionarysPageAsync(GetDictionaryPageViewModel model)
+        {
+            var query = new QueryData<SysDictionaryQuery>()
+            {
+                Criteria = new SysDictionaryQuery()
+                {
+                    Type = model.Type,
+                    TypeName = model.TypeName,
+                    IsDelete = model.IsDelete
+                },
+                PageModel = model.PageModel
+            };
+            var result = await _manager.GetDictionaryPageAsync(query);
 
             return Ok(result);
         }
