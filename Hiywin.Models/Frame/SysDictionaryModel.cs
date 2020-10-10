@@ -16,6 +16,7 @@ namespace Hiywin.Models.Frame
         public string ParentNo { get; set; }
         public string Descr { get; set; }
         public string CompanyNo { get; set; }
+        public int Sort { get; set; }
         public string Creator { get; set; }
         public string CreateName { get; set; }
         public DateTime CreateTime { get; set; }

@@ -17,29 +17,8 @@ namespace Hiywin.Common.Helpers
         /// <param name="condition"></param>
         public static void StringAdd(StringBuilder builder, string formater, object paramValue, string condition = " and ")
         {
-            switch (paramValue?.GetType()?.Name)
-            {
-                case "String":
-                    if (!string.IsNullOrEmpty(paramValue.ToString()))
-                    {
-                        if (builder.Length > 0) builder.AppendLine(condition);
-                        builder.AppendLine(string.Format(formater, paramValue));
-                    }
-                    break;
-                case "Int32":
-                    if ((int)paramValue > 0)
-                    {
-                        if (builder.Length > 0) builder.AppendLine(condition);
-                        builder.AppendLine(string.Format(formater, paramValue));
-                    }
-                    break;
-                case "Boolean":
-                    if (builder.Length > 0) builder.AppendLine(condition);
-                    builder.AppendLine(string.Format(formater, paramValue));
-                    break;
-                default:
-                    break;
-            }
+            if (builder.Length > 0) builder.AppendLine(condition);
+            builder.AppendLine(string.Format(formater, paramValue));
         }
 
         /// <summary>

@@ -15,6 +15,7 @@ namespace Hiywin.IFrameService.Structs
         public string Descr { get; set; }
         public string CompanyNo { get; set; }
         public bool IsDelete { get; set; }
+        public int Sort { get; set; }
         public string Creator { get; set; }
         public string CreateName { get; set; }
         public DateTime CreateTime { get; set; }

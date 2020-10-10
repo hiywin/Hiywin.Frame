@@ -26,12 +26,16 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "Type = @Type", query.Criteria.Type);
             StringHelper.ParameterAdd(builder, "TypeName like concat('%',@TypeName,'%')", query.Criteria.TypeName);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
+            if (query.Criteria.ParentNo != null)
+            {
+                StringHelper.StringAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
+            }
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,CompanyNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
+            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,CompanyNo,Sort,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
                 " from sys_dictionary"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -60,13 +64,17 @@ namespace Hiywin.FrameService
 
             StringHelper.ParameterAdd(builder, "Type = @Type", query.Criteria.Type);
             StringHelper.ParameterAdd(builder, "TypeName like concat('%',@TypeName,'%')", query.Criteria.TypeName);
+            StringHelper.ParameterAdd(builder, "Content like concat('%',@Content,'%')", query.Criteria.Content);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
-
+            if (query.Criteria.ParentNo != null)
+            {
+                StringHelper.StringAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
+            }
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,CompanyNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
+            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,CompanyNo,Sort,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
                 " from sys_dictionary"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -91,9 +99,9 @@ namespace Hiywin.FrameService
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_dictionary(DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,CompanyNo,Creator,CreateName,CreateTime,IsDelete)
+            string sqli = @"insert into sys_dictionary(DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,CompanyNo,Sort,Creator,CreateName,CreateTime,IsDelete)
                 values(@DictionaryNo,@Type,@TypeName,@Content,@Code,@ParentNo,@Descr,@CompanyNo,@Creator,@CreateName,@CreateTime,@IsDelete)";
-            string sqlu = @"update sys_dictionary set Type=@Type,TypeName=@TypeName,Content=@Content,Code=@Code,ParentNo=@ParentNo,Descr=@Descr,CompanyNo=@CompanyNo,
+            string sqlu = @"update sys_dictionary set Type=@Type,TypeName=@TypeName,Content=@Content,Code=@Code,ParentNo=@ParentNo,Descr=@Descr,CompanyNo=@CompanyNo,Sort=@Sort,
                 Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete
                 where DictionaryNo=@DictionaryNo";
             string sqlc = @"select Id from sys_dictionary where DictionaryNo=@DictionaryNo";

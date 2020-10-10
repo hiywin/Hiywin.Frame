@@ -15,6 +15,7 @@ namespace Hiywin.Entities.Frame
         string ParentNo { get; set; }
         string Descr { get; set; }
         string CompanyNo { get; set; }
+        int Sort { get; set; }
         string Creator { get; set; }
         string CreateName { get; set; }
         DateTime CreateTime { get; set; }

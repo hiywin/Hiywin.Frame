@@ -8,6 +8,8 @@ namespace Hiywin.IFrameService.Structs
     {
         public string Type { get; set; }
         public string TypeName { get; set; }
+        public string Content { get; set; }
+        public string ParentNo { get; set; }
         public bool? IsDelete { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace Hiywin.Api.Controllers
                 {
                     Type = model.Type,
                     TypeName = model.TypeName,
+                    ParentNo = model.ParentNo,
                     IsDelete = model.IsDelete
                 }
             };
@@ -50,6 +51,8 @@ namespace Hiywin.Api.Controllers
                 {
                     Type = model.Type,
                     TypeName = model.TypeName,
+                    Content = model.Content,
+                    ParentNo = model.ParentNo,
                     IsDelete = model.IsDelete
                 },
                 PageModel = model.PageModel
