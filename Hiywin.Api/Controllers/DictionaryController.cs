@@ -30,6 +30,7 @@ namespace Hiywin.Api.Controllers
             {
                 Criteria = new SysDictionaryQuery()
                 {
+                    App = model.App,
                     Type = model.Type,
                     TypeName = model.TypeName,
                     ParentNo = model.ParentNo,
@@ -49,6 +50,7 @@ namespace Hiywin.Api.Controllers
             {
                 Criteria = new SysDictionaryQuery()
                 {
+                    App = model.App,
                     Type = model.Type,
                     TypeName = model.TypeName,
                     Content = model.Content,
@@ -76,7 +78,8 @@ namespace Hiywin.Api.Controllers
                     Code=model.Code,
                     ParentNo=model.ParentNo,
                     Descr=model.Descr,
-                    CompanyNo=model.CompanyNo,
+                    App = model.App,
+                    Sort=model.Sort,
                     IsDelete=model.IsDelete
                 },
                 Extend = new QueryExtend()

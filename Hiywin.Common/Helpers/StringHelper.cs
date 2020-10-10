@@ -17,6 +17,7 @@ namespace Hiywin.Common.Helpers
         /// <param name="condition"></param>
         public static void StringAdd(StringBuilder builder, string formater, object paramValue, string condition = " and ")
         {
+            if (paramValue == null) return;
             if (builder.Length > 0) builder.AppendLine(condition);
             builder.AppendLine(string.Format(formater, paramValue));
         }

@@ -14,7 +14,7 @@ namespace Hiywin.Entities.Frame
         string Code { get; set; }
         string ParentNo { get; set; }
         string Descr { get; set; }
-        string CompanyNo { get; set; }
+        string App { get; set; }
         int Sort { get; set; }
         string Creator { get; set; }
         string CreateName { get; set; }
