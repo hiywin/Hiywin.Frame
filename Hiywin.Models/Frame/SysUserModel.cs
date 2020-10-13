@@ -10,11 +10,16 @@ namespace Hiywin.Models.Frame
         public int Id { get; set; }
         public string UserNo { get; set; }
         public string UserName { get; set; }
-        public string Pwd { get; set; }
+        public string StaffNo { get; set; }
+        public string AdAccount { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
+        public string Pwd { get; set; }
+        public string RealName { get; set; }
+        public bool IsAdmin { get; set; }
         public string Icon { get; set; }
-        public int App { get; set; }
+        public string AppNo { get; set; }
+        public string CompanyNo { get; set; }
         public DateTime RegisterTime { get; set; }
         public string ApprovedBy { get; set; }
         public DateTime? ApprovedTime { get; set; }
@@ -29,10 +34,6 @@ namespace Hiywin.Models.Frame
         public string Updator { get; set; }
         public string UpdateName { get; set; }
         public DateTime? UpdateTime { get; set; }
-        public string IsDelete { get; set; }
-        public string StaffNo { get; set; }
-        public string CompanyNo { get; set; }
-        public bool IsAdmin { get; set; }
-        public string AdAccount { get; set; }
+        public bool IsDelete { get; set; }
     }
 }

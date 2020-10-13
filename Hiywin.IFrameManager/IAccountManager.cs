@@ -12,6 +12,6 @@ namespace Hiywin.IFrameManager
     {
         Task<ErrData<bool>> RegisterAsync(QueryData<SysUserSaveOrUpdateQuery> query);
 
-        Task<ErrData<ISysUserModel>> LoginAsync(QueryData<SysUserGetQuery> query);
+        Task<ErrData<ISysUserModel>> LoginAsync(QueryData<SysUserQuery> query);
     }
 }

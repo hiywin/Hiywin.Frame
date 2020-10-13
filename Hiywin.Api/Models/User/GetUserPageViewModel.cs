@@ -1,24 +1,25 @@
-﻿using Hiywin.Common.Enum;
+﻿using Hiywin.Common.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Hiywin.Api.Models.Account
+namespace Hiywin.Api.Models.User
 {
-    public class RegisterViewModel
+    public class GetUserPageViewModel
     {
-        [Required]
+        public string UserNo { get; set; }
         public string UserName { get; set; }
-        [Required]
-        public string Password { get; set; }
-        public string RealName { get; set; }
         public string StaffNo { get; set; }
         public string AdAccount { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
+        public string RealName { get; set; }
+        public string CompanyNo { get; set; }
+        public bool? Access { get; set; }
+        public bool IsDelete { get; set; }
         [Required]
-        public string AppNo { get; set; }
+        public PageModel PageModel { get; set; }
     }
 }

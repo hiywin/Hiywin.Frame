@@ -6,36 +6,36 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hiywin.IFrameService
+namespace Hiywin.IFrameManager
 {
-    public interface IUserService
+    public interface IUserManager
     {
         /// <summary>
         /// 获取全部用户列表
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<DataResult<List<ISysUserModel>>> GetUserAllAsync(QueryData<SysUserQuery> query);
+        Task<ListResult<ISysUserModel>> GetUserAllAsync(QueryData<SysUserQuery> query);
 
         /// <summary>
         /// 分页获取用户列表
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<DataResult<List<ISysUserModel>>> GetUserPageAsync(QueryData<SysUserQuery> query);
+        Task<ListResult<ISysUserModel>> GetUserPageAsync(QueryData<SysUserQuery> query);
 
         /// <summary>
-        /// 新增或修改用户信息
+        /// 新增或更新用户信息
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<DataResult<int>> UserSaveOrUpdateAsync(QueryData<SysUserSaveOrUpdateQuery> query);
+        Task<ErrData<bool>> UserSaveOrUpdateAsync(QueryData<SysUserSaveOrUpdateQuery> query);
 
         /// <summary>
-        /// 删除用户信息
+        /// 删除用户信息（IsDelete=true为软删除，IsDelete=false为物理删除）
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<DataResult<int>> UserDeleteAsync(QueryData<SysUserDeleteQuery> query);
+        Task<ErrData<bool>> UserDeleteAsync(QueryData<SysUserDeleteQuery> query);
     }
 }

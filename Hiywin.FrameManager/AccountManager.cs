@@ -28,9 +28,9 @@ namespace Hiywin.FrameManager
             query.Criteria.CreateName = "注册";
             query.Criteria.CreateTime = DateTime.Now;
             query.Criteria.RegisterTime = DateTime.Now;
-            query.Criteria.Access = true;
+            query.Criteria.Access = false;
 
-            var res = await _service.SysUserSaveOrUpdateAsync(query);
+            var res = await _service.UserSaveOrUpdateAsync(query);
             if (res.HasErr)
             {
                 if (res.ErrCode == -101)
@@ -51,13 +51,14 @@ namespace Hiywin.FrameManager
             return result;
         }
 
-        public async Task<ErrData<ISysUserModel>> LoginAsync(QueryData<SysUserGetQuery> query)
+        public async Task<ErrData<ISysUserModel>> LoginAsync(QueryData<SysUserQuery> query)
         {
             var result = new ErrData<ISysUserModel>();
             var dt = DateTime.Now;
 
             query.Criteria.IsDelete = false;
-            var res = await _service.GetSysUserAllAsync(query);
+            query.Criteria.Access = true;
+            var res = await _service.GetUserAllAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(null, res.ErrMsg, res.ErrCode);

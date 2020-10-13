@@ -39,14 +39,26 @@ namespace Hiywin.Api.Controllers
                         case "userName":
                             user.UserName = claim.Value;
                             break;
-                        case "adAccount":
-                            user.AdAccount = claim.Value;
+                        case "realName":
+                            user.RealName = claim.Value;
                             break;
                         case "staffNo":
                             user.StaffNo = claim.Value;
                             break;
+                        case "adAccount":
+                            user.AdAccount = claim.Value;
+                            break;
+                        case "mobile":
+                            user.Mobile = claim.Value;
+                            break;
+                        case "email":
+                            user.Email = claim.Value;
+                            break;
                         case "isAdmin":
                             user.IsAdmin = Convert.ToBoolean(claim.Value);
+                            break;
+                        case "appNo":
+                            user.AppNo = claim.Value;
                             break;
                     }
                 }

@@ -27,9 +27,13 @@ namespace Hiywin.Common.Jwt
                 new Claim(JwtRegisteredClaimNames.Iat,ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(),ClaimValueTypes.Integer64),
                 identity.FindFirst("userNo"),
                 identity.FindFirst("userName"),
+                identity.FindFirst("realName"),
+                identity.FindFirst("staffNo"),
                 identity.FindFirst("adAccount"),
+                identity.FindFirst("mobile"),
+                identity.FindFirst("email"),
                 identity.FindFirst("isAdmin"),
-                identity.FindFirst("staffNo")
+                identity.FindFirst("appNo")
             };
 
             //Create the JWT security token and encode it.
@@ -58,9 +62,13 @@ namespace Hiywin.Common.Jwt
             var claimsIdentity = new ClaimsIdentity(new GenericIdentity(user.UserNo, "Token"));
             claimsIdentity.AddClaim(new Claim("userNo", user.UserNo));
             claimsIdentity.AddClaim(new Claim("userName", user.UserName));
-            claimsIdentity.AddClaim(new Claim("adAccount", user.AdAccount));
+            claimsIdentity.AddClaim(new Claim("realName", string.IsNullOrEmpty(user.RealName) ? string.Empty : user.RealName));
+            claimsIdentity.AddClaim(new Claim("staffNo", string.IsNullOrEmpty(user.StaffNo) ? string.Empty : user.StaffNo));
+            claimsIdentity.AddClaim(new Claim("adAccount", string.IsNullOrEmpty(user.AdAccount) ? string.Empty : user.AdAccount));
+            claimsIdentity.AddClaim(new Claim("mobile", string.IsNullOrEmpty(user.Mobile) ? string.Empty : user.Mobile));
+            claimsIdentity.AddClaim(new Claim("email", string.IsNullOrEmpty(user.Email) ? string.Empty : user.Email));
             claimsIdentity.AddClaim(new Claim("isAdmin", user.IsAdmin.ToString()));
-            claimsIdentity.AddClaim(new Claim("staffNo", user.StaffNo));
+            claimsIdentity.AddClaim(new Claim("appNo", string.IsNullOrEmpty(user.AppNo) ? string.Empty : user.AppNo));
 
             return claimsIdentity;
         }

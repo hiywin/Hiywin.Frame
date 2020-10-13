@@ -12,29 +12,39 @@ namespace Hiywin.Common.Data
         public string ConnString { get; set; }
 
         /// <summary>
-        /// 登录账号
+        /// 用户编号
         /// </summary>
         public string UserNo { get; set; }
 
         /// <summary>
-        /// 登录人姓名
+        /// 用户名
         /// </summary>
         public string UserName { get; set; }
 
         /// <summary>
-        /// 入库类型：原材料入库、退料入库、原材料出库
+        /// 真实姓名
         /// </summary>
-        public string StorageType { get; set; }
+        public string RealName { get; set; }
 
         /// <summary>
-        /// 登录仓库
+        /// 工号
         /// </summary>
-        public string RepertoryId { get; set; }
+        public string StaffNo { get; set; }
 
         /// <summary>
-        /// EAS权限
+        /// AD账号
         /// </summary>
-        public string UnitFid { get; set; }
+        public string AdAccount { get; set; }
+
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        public string Mobile { get; set; }
+
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string Email { get; set; }
 
         /// <summary>
         /// 是否管理员
@@ -42,12 +52,8 @@ namespace Hiywin.Common.Data
         public bool IsAdmin { get; set; }
 
         /// <summary>
-        /// 密码
+        /// 请求接口的平台
         /// </summary>
-        public string Pwd { get; set; }
-        /// <summary>
-        /// 当前操作的Forms表单ID
-        /// </summary>
-        public string FormsID { get; set; }
+        public string AppNo { get; set; }
     }
 }

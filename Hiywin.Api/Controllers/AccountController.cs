@@ -44,7 +44,7 @@ namespace Hiywin.Api.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost,Route("register")]
+        [HttpPost, Route("register")]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             var query = new QueryData<SysUserSaveOrUpdateQuery>()
@@ -52,10 +52,13 @@ namespace Hiywin.Api.Controllers
                 Criteria = new SysUserSaveOrUpdateQuery()
                 {
                     UserName = model.UserName,
+                    Pwd = model.Password,
+                    RealName = model.RealName,
                     StaffNo = model.StaffNo,
                     AdAccount = model.AdAccount,
-                    Pwd = model.Password,
-                    App = (int)model.App
+                    Mobile = model.Mobile,
+                    Email = model.Email,
+                    AppNo = model.AppNo
                 }
             };
             var result = await _manager.RegisterAsync(query);
@@ -68,20 +71,21 @@ namespace Hiywin.Api.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost,Route("login")]
+        [HttpPost, Route("login")]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
             var result = new ErrData<string>();
 
-            var query = new QueryData<SysUserGetQuery>()
+            var query = new QueryData<SysUserQuery>()
             {
-                Criteria = new SysUserGetQuery()
+                Criteria = new SysUserQuery()
                 {
                     UserName = model.UserName,
                     StaffNo = model.StaffNo,
                     AdAccount = model.AdAccount,
-                    Pwd = model.Password,
-                    App = (int)model.App
+                    Mobile = model.Mobile,
+                    Email = model.Email,
+                    Pwd = model.Password
                 }
             };
             var res = await _manager.LoginAsync(query);
@@ -94,9 +98,13 @@ namespace Hiywin.Api.Controllers
                 var user = new LoginUser();
                 user.UserNo = res.Data.UserNo;
                 user.UserName = res.Data.UserName;
-                user.AdAccount = res.Data.AdAccount;
-                user.IsAdmin = res.Data.IsAdmin;
+                user.RealName = res.Data.RealName;
                 user.StaffNo = res.Data.StaffNo;
+                user.AdAccount = res.Data.AdAccount;
+                user.Mobile = res.Data.Mobile;
+                user.Email = res.Data.Email;
+                user.IsAdmin = res.Data.IsAdmin;
+                user.AppNo = model.AppNo;
 
                 var claimsIdentity = _jwtFactory.GenerateClaimsIdentity(user);
                 var tokenJson = await _jwtFactory.GenerateEncodedToken(user.UserNo, claimsIdentity);

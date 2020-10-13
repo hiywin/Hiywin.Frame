@@ -1,6 +1,4 @@
-﻿using Hiywin.Common.IoC;
-using Hiywin.IFrameManager;
-using Hiywin.Utility;
+﻿
 using System;
 
 namespace Hiywin.Test
@@ -24,7 +22,7 @@ namespace Hiywin.Test
             Console.Read();
         }
 
-        static async void TestIoC()
+        static void TestIoC()
         {
             //IModuleManager _manager = IoCContainer.Resolve<IModuleManager>();
             //var result = await _manager.GetModluleAllAsync(new Common.Data.QueryData<IFrameService.Structs.SysModuleQuery>());
