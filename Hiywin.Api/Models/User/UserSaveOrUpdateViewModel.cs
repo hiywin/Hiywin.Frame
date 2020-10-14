@@ -23,8 +23,10 @@ namespace Hiywin.Api.Models.User
         public string AppNo { get; set; }
         public string CompanyNo { get; set; }
         public string ApprovedBy { get; set; }
+        public string ApprovedName { get; set; }
         public string Descr { get; set; }
         public string RejectedBy { get; set; }
+        public string RejectedName { get; set; }
         public string RejectedReason { get; set; }
         public bool Access { get; set; }
         public bool IsDelete { get; set; }

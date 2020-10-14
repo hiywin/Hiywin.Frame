@@ -20,9 +20,11 @@ namespace Hiywin.IFrameService.Structs
         public string CompanyNo { get; set; }
         public DateTime RegisterTime { get; set; }
         public string ApprovedBy { get; set; }
+        public string ApprovedName { get; set; }
         public DateTime? ApprovedTime { get; set; }
         public string Descr { get; set; }
         public string RejectedBy { get; set; }
+        public string RejectedName { get; set; }
         public DateTime? RejectedTime { get; set; }
         public string RejectedReason { get; set; }
         public bool Access { get; set; }

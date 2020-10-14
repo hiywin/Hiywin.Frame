@@ -61,6 +61,8 @@ namespace Hiywin.Api.Controllers
                     Mobile = model.Mobile,
                     Email = model.Email,
                     RealName = model.RealName,
+                    ApprovedName = model.ApprovedName,
+                    RejectedName = model.RejectedName,
                     CompanyNo = model.CompanyNo,
                     Access = model.Access,
                     IsDelete = model.IsDelete
@@ -92,8 +94,10 @@ namespace Hiywin.Api.Controllers
                     AppNo = model.AppNo,
                     CompanyNo = model.CompanyNo,
                     ApprovedBy = model.ApprovedBy,
+                    ApprovedName = model.ApprovedName,
                     Descr = model.Descr,
                     RejectedBy = model.RejectedBy,
+                    RejectedName = model.RejectedName,
                     RejectedReason = model.RejectedReason,
                     Access = model.Access,
                     IsDelete = model.IsDelete
@@ -101,7 +105,8 @@ namespace Hiywin.Api.Controllers
                 Extend = new QueryExtend()
                 {
                     UserNo = CurrentUser.UserNo,
-                    UserName = CurrentUser.UserName
+                    UserName = CurrentUser.UserName,
+                    IsAdmin = CurrentUser.IsAdmin
                 }
             };
             var result = await _manager.UserSaveOrUpdateAsync(query);

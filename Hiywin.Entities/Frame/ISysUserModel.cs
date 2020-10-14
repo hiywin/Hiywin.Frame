@@ -21,9 +21,11 @@ namespace Hiywin.Entities.Frame
         string CompanyNo { get; set; }
         DateTime RegisterTime { get; set; }
         string ApprovedBy { get; set; }
+        string ApprovedName { get; set; }
         DateTime? ApprovedTime { get; set; }
         string Descr { get; set; }
         string RejectedBy { get; set; }
+        string RejectedName { get; set; }
         DateTime? RejectedTime { get; set; }
         string RejectedReason { get; set; }
         bool Access { get; set; }

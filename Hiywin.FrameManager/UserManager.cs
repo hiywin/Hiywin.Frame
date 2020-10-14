@@ -85,6 +85,12 @@ namespace Hiywin.FrameManager
             {
                 query.Criteria.RejectedTime = DateTime.Now;
             }
+            if (query.Criteria.IsAdmin && !query.Extend.IsAdmin)
+            {
+                result.SetInfo(false, "您无权限设置管理员账号信息！", -201);
+                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                return result;
+            }
             if (string.IsNullOrEmpty(query.Criteria.CompanyNo))
             {
                 if (!string.IsNullOrEmpty(query.Criteria.StaffNo))
