@@ -67,7 +67,11 @@ namespace Hiywin.Api.Controllers
                     Access = model.Access,
                     IsDelete = model.IsDelete
                 },
-                PageModel = model.PageModel
+                PageModel = model.PageModel,
+                Extend = new QueryExtend()
+                {
+                    IsAdmin = CurrentUser.IsAdmin
+                }
             };
             var result = await _manager.GetUserPageAsync(query);
 

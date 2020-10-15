@@ -78,6 +78,11 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "RejectedName like concat('%',@RejectedName,'%')", query.Criteria.RejectedName);
             StringHelper.ParameterAdd(builder, "CompanyNo = @CompanyNo", query.Criteria.CompanyNo);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
+            // 非管理员无法查看管理员账号
+            if (!query.Extend.IsAdmin)
+            {
+                StringHelper.ParameterAdd(builder, "(IsAdmin=false or IsAdmin is null)", query.Extend.IsAdmin);
+            }
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
@@ -110,19 +115,19 @@ namespace Hiywin.FrameService
             var result = new DataResult<int>();
 
             string sqli = @"insert into sys_user(UserNo,UserName,Pwd,RealName,Mobile,Email,AdAccount,StaffNo,CompanyNo,Icon,AppNo,RegisterTime,
-                ApprovedBy,ApprovedName,ApprovedTime,Descr,Access,Creator,CreateName,CreateTime)
+                ApprovedBy,ApprovedName,ApprovedTime,Descr,RejectedBy,RejectedName,RejectedTime,RejectedReason,Access,Creator,CreateName,CreateTime)
                 values(@UserNo,@UserName,@Pwd,@RealName,@Mobile,@Email,@AdAccount,@StaffNo,@CompanyNo,@Icon,@AppNo,@RegisterTime,
-                @ApprovedBy,@ApprovedName,@ApprovedTime,@Descr,@Access,@Creator,@CreateName,@CreateTime)";
+                @ApprovedBy,@ApprovedName,@ApprovedTime,@Descr,@RejectedBy,@RejectedName,@RejectedTime,@RejectedReason,@Access,@Creator,@CreateName,@CreateTime)";
             string sqlu = @"update sys_user set UserName=@UserName,Pwd=@Pwd,RealName=@RealName,Mobile=@Mobile,Email=@Email,AdAccount=@AdAccount,StaffNo=@StaffNo,
                 CompanyNo=@CompanyNo,Icon=@Icon,ApprovedBy=@ApprovedBy,ApprovedName=@ApprovedName,ApprovedTime=@ApprovedTime,Descr=@Descr,
                 RejectedBy=@RejectedBy,RejectedName=@RejectedName,RejectedTime=@RejectedTime,RejectedReason=@RejectedReason,IsAdmin=@IsAdmin,
                 Access=@Access,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete                
                 where UserNo=@UserNo";
-            string sqlcu = @"select Id from sys_user where UserName=@UserName and IsDelete=false";
-            string sqlcm = @"select Id from sys_user where Mobile=@Mobile and IsDelete=false";
-            string sqlce = @"select Id from sys_user where Email=@Email and IsDelete=false";
-            string sqlcc = @"select Id from sys_user where StaffNo=@StaffNo and CompanyNo=@CompanyNo and IsDelete=false";
-            string sqlca = @"select Id from sys_user where AdAccount=@AdAccount and CompanyNo=@CompanyNo and IsDelete=false";
+            string sqlcu = @"select Id from sys_user where UserName=@UserName and IsDelete=false and UserNo <> @UserNo";
+            string sqlcm = @"select Id from sys_user where Mobile=@Mobile and IsDelete=false and UserNo <> @UserNo";
+            string sqlce = @"select Id from sys_user where Email=@Email and IsDelete=false and UserNo <> @UserNo";
+            string sqlcc = @"select Id from sys_user where StaffNo=@StaffNo and CompanyNo=@CompanyNo and IsDelete=false and UserNo <> @UserNo";
+            string sqlca = @"select Id from sys_user where AdAccount=@AdAccount and CompanyNo=@CompanyNo and IsDelete=false and UserNo <> @UserNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
             {
                 try
