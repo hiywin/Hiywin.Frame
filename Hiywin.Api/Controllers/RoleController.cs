@@ -108,7 +108,8 @@ namespace Hiywin.Api.Controllers
             {
                 Criteria = new SysRoleModuleQuery()
                 {
-                    RoleNo = model.RoleNo
+                    RoleNo = model.RoleNo,
+                    ModuleName = model.ModuleName
                 },
                 PageModel = model.PageModel
             };

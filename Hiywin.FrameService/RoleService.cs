@@ -196,6 +196,7 @@ namespace Hiywin.FrameService
             string sqlCondition = string.Empty;
 
             StringHelper.ParameterAdd(builder, "a.RoleNo = @RoleNo", query.Criteria.RoleNo);
+            StringHelper.ParameterAdd(builder, "ModuleName like concat('%',@ModuleName,'%')", query.Criteria.ModuleName);
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();

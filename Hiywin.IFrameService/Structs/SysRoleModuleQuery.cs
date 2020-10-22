@@ -7,5 +7,6 @@ namespace Hiywin.IFrameService.Structs
     public class SysRoleModuleQuery
     {
         public string RoleNo { get; set; }
+        public string ModuleName { get; set; }
     }
 }

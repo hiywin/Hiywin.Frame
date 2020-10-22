@@ -11,6 +11,7 @@ namespace Hiywin.Api.Models.Role
     {
         [Required]
         public string RoleNo { get; set; }
+        public string ModuleName { get; set; }
         [Required]
         public PageModel PageModel { get; set; }
     }
