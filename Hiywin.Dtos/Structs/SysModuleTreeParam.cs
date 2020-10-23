@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Hiywin.Dtos.Structs
 {
-    public class SysModuleTreeQuery
+    public class SysModuleTreeParam
     {
         public string ModuleName { get; set; }
         public string ParentNo { get; set; }
-        public int App { get; set; }
+        public string AppNo { get; set; }
     }
 }

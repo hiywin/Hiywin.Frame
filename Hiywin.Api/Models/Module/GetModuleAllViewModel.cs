@@ -12,6 +12,6 @@ namespace Hiywin.Api.Models.Module
         public bool? IsDelete { get; set; }
         public string ParentNo { get; set; }
         public bool? IsParentNo { get; set; }
-        public int? App { get; set; }
+        public string AppNo { get; set; }
     }
 }

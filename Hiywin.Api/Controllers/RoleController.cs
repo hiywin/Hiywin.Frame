@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hiywin.Api.Models.Role;
 using Hiywin.Common.Data;
 using Hiywin.Common.IoC;
+using Hiywin.Dtos.Structs;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService.Structs;
 using Microsoft.AspNetCore.Authorization;
@@ -101,6 +102,22 @@ namespace Hiywin.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize, HttpPost, Route("get_role_modules_all")]
+        public async Task<ActionResult> GetRoleModulesAllAsync(GetRoleModuleAllViewModel model)
+        {
+            var query = new QueryData<SysRoleModuleQuery>()
+            {
+                Criteria = new SysRoleModuleQuery()
+                {
+                    RoleNo = model.RoleNo,
+                    ModuleName = model.ModuleName
+                }
+            };
+            var result = await _manager.GetRoleModuleAllAsync(query);
+
+            return Ok(result);
+        }
+
         [Authorize, HttpPost, Route("get_role_modules_page")]
         public async Task<ActionResult> GetRoleModulesPageAsync(GetRoleModulePageViewModel model)
         {
@@ -131,6 +148,48 @@ namespace Hiywin.Api.Controllers
                 }
             };
             var result = await _manager.GetRolePowerAllAsync(query);
+
+            return Ok(result);
+        }
+
+        [Authorize,HttpPost,Route("role_module_save_or_update")]
+        public async Task<ActionResult> RoleModuleSaveOrUpdateAsync(RoleModuleSaveOrUpdateViewModel model)
+        {
+            var query = new QueryData<SysRoleModuleSaveOrUpdateQuery>()
+            {
+                Criteria = new SysRoleModuleSaveOrUpdateQuery()
+                {
+                    RoleNo = model.RoleNo,
+                    LstModuleNo = model.LstModuleNo
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = CurrentUser.UserNo,
+                    UserName = CurrentUser.UserName
+                }
+            };
+            var result = await _manager.RoleModuleSaveOrUpdateAsync(query);
+
+            return Ok(result);
+        }
+
+        [Authorize, HttpPost, Route("role_power_save_or_update")]
+        public async Task<ActionResult> RolePowerSaveOrUpdateAsync(RolePowerSaveOrUpdateViewModel model)
+        {
+            var query = new QueryData<SysRolePowerParam>()
+            {
+                Criteria = new SysRolePowerParam()
+                {
+                    RoleNo = model.RoleNo,
+                    LstRolePower = model.LstRolePower
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = CurrentUser.UserNo,
+                    UserName = CurrentUser.UserName
+                }
+            };
+            var result = await _manager.RolePowerSaveOrUpdateAsync(query);
 
             return Ok(result);
         }

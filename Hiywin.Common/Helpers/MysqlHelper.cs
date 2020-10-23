@@ -231,10 +231,10 @@ namespace Hiywin.Common.Helpers
         /// <param name="sqlstr"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        public static async Task<int> QueryCountAsync(IDbConnection conn, string sqlstr, dynamic param = null)
+        public static async Task<int> QueryCountAsync(IDbConnection conn, string sqlstr, dynamic param, IDbTransaction transaction = null)
         {
             string sql = string.Format("SELECT count(1) num FROM  ({0}) A", sqlstr);
-            var cr = await SqlMapper.QueryAsync(conn, sql, param);
+            var cr = await SqlMapper.QueryAsync(conn, sql, param, transaction);
             var singleOrDefault = ((IEnumerable<dynamic>)cr).SingleOrDefault();
             if (singleOrDefault != null)
             {

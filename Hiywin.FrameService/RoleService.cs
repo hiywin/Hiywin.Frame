@@ -1,6 +1,7 @@
 ﻿using Hiywin.Common;
 using Hiywin.Common.Data;
 using Hiywin.Common.Helpers;
+using Hiywin.Common.IoC;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameService;
 using Hiywin.IFrameService.Structs;
@@ -188,6 +189,41 @@ namespace Hiywin.FrameService
             return result;
         }
 
+        public async Task<DataResult<List<ISysRoleModuleModel>>> GetRoleModulesAllAsync(QueryData<SysRoleModuleQuery> query)
+        {
+            var lr = new DataResult<List<ISysRoleModuleModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "a.RoleNo = @RoleNo", query.Criteria.RoleNo);
+            StringHelper.ParameterAdd(builder, "ModuleName like concat('%',@ModuleName,'%')", query.Criteria.ModuleName);
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = @"select a.Id,a.RoleNo,a.ModuleNo,ModuleName,a.Creator,a.CreateName,a.CreateTime
+                from sys_rolemodule a
+                left join sys_module b
+                on a.ModuleNo=b.ModuleNo"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryListAsync<SysRoleModuleModel>(dbConn, sql, "ModuleName asc", query.Criteria);
+                    lr.Data = modelList.ToList<ISysRoleModuleModel>();
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
         public async Task<DataResult<List<ISysRoleModuleModel>>> GetRoleModulesPageAsync(QueryData<SysRoleModuleQuery> query)
         {
             var lr = new DataResult<List<ISysRoleModuleModel>>();
@@ -258,6 +294,122 @@ namespace Hiywin.FrameService
             }
 
             return lr;
+        }
+
+        public async Task<DataResult<int>> RoleModuleSaveOrUpdateAsync(QueryData<SysRoleModuleSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_rolemodule(RoleNo,ModuleNo,Creator,CreateName,CreateTime)
+                values(@RoleNo,@ModuleNo,@Creator,@CreateName,@CreateTime)";
+            string sqld = @"delete from sys_rolemodule where RoleNo=@RoleNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    if (!string.IsNullOrEmpty(query.Criteria.RoleNo))
+                    {
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria,transaction);
+                        if (result.Data < 0)
+                        {
+                            result.SetErr("更新模块权限失败！", -101);
+                            transaction.Rollback();
+                            return result;
+                        }
+                        var date = DateTime.Now;
+                        foreach (var moduleNo in query.Criteria.LstModuleNo)
+                        {
+                            ISysRolePowerModel model = IoCContainer.Resolve<ISysRolePowerModel>();
+                            model.RoleNo = query.Criteria.RoleNo;
+                            model.ModuleNo = moduleNo;
+                            model.Creator = query.Extend.UserNo;
+                            model.CreateName = query.Extend.UserName;
+                            model.CreateTime = date;
+
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
+                            if (result.Data <= 0)
+                            {
+                                result.SetErr("更新模块权限失败！", -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result.SetErr("未选择角色无法更新权限！", -101);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> RolePowerSaveOrUpdateAsync(QueryData<SysRolePowerSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_rolepower(RoleNo,PowerNo,Creator,CreateName,CreateTime)
+                values(@RoleNo,@PowerNo,@Creator,@CreateName,@CreateTime)";
+            string sqld = @"delete from sys_rolepower where RoleNo=@RoleNo and PowerNo=@PowerNo";
+            string sqlc = @"select Id from sys_rolepower where RoleNo=@RoleNo and PowerNo=@PowerNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    if (!string.IsNullOrEmpty(query.Criteria.RoleNo))
+                    {
+                        foreach (var model in query.Criteria.LstRolePower)
+                        {
+                            if (model.IsDelete)
+                            {
+                                result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, model, transaction);
+                                if (result.Data < 0)
+                                {
+                                    result.SetErr(string.Format("更新 {0} 按钮权限失败！",model.PowerName), -101);
+                                    transaction.Rollback();
+                                    return result;
+                                }
+                            }
+                            else
+                            {
+                                result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, model, transaction);
+                                if (result.Data > 0) continue;
+
+                                result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
+                                if (result.Data < 0)
+                                {
+                                    result.SetErr(string.Format("更新 {0} 按钮权限失败！", model.PowerName), -101);
+                                    transaction.Rollback();
+                                    return result;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result.SetErr("未选择角色无法更新权限！", -101);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
         }
     }
 }

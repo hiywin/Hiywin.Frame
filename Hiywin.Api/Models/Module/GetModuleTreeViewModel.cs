@@ -9,6 +9,6 @@ namespace Hiywin.Api.Models.Module
     {
         public string ModuleName { get; set; }
         public string ParentNo { get; set; }
-        public int App { get; set; }
+        public string AppNo { get; set; }
     }
 }

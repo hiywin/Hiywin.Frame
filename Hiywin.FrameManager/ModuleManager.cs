@@ -112,7 +112,7 @@ namespace Hiywin.FrameManager
             return result;
         }
 
-        public async Task<ListResult<SysModuleTreeDto>> GetModuleTreeAsync(QueryData<SysModuleTreeQuery> query)
+        public async Task<ListResult<SysModuleTreeDto>> GetModuleTreeAsync(QueryData<SysModuleTreeParam> query)
         {
             var lr = new ListResult<SysModuleTreeDto>();
             var dt = DateTime.Now;
@@ -124,7 +124,7 @@ namespace Hiywin.FrameManager
                     ParentNo = string.Empty,
                     IsParentNo = null,
                     IsDelete = false,
-                    App = query.Criteria.App
+                    AppNo = query.Criteria.AppNo
                 }
             };
             var resAll = await GetModuleAllAsync(queryAll);
@@ -146,7 +146,7 @@ namespace Hiywin.FrameManager
                     module.ModuleName = parentModule.ModuleName;
                     module.ParentNo = parentModule.ParentNo;
                     module.Icon = parentModule.Icon;
-                    module.App = parentModule.App;
+                    module.AppNo = parentModule.AppNo;
                     module.Sort = parentModule.Sort;
                     module.IsDelete = parentModule.IsDelete;
 
@@ -177,7 +177,7 @@ namespace Hiywin.FrameManager
                 module.ModuleName = childrenModule.ModuleName;
                 module.ParentNo = childrenModule.ParentNo;
                 module.Icon = childrenModule.Icon;
-                module.App = childrenModule.App;
+                module.AppNo = childrenModule.AppNo;
                 module.Sort = childrenModule.Sort;
                 module.IsDelete = childrenModule.IsDelete;
 

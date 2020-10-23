@@ -21,20 +21,6 @@ namespace Hiywin.FrameService
         {
             var lr = new DataResult<List<ISysModuleModel>>();
 
-            #region SQL拼接写法1 - 参数、值直接拼接
-            //StringBuilder builder = new StringBuilder();
-            //string sqlCondition = string.Empty;
-
-            //StringHelper.StringAdd(builder, " ModuleNo = '{0}' ", query.Criteria.ModuleNo);
-            //StringHelper.StringAdd(builder, " ModuleName = '{0}' ", query.Criteria.ModuleName);
-            //StringHelper.StringAdd(builder, " IsDelete = {0} ", query.Criteria.IsDelete);
-
-            //if (builder.Length > 0)
-            //{
-            //    sqlCondition = " where " + builder.ToString();
-            //}
-            #endregion
-            #region SQL拼接写法2 - 使用匿名参数，防注入漏洞
             StringBuilder builder = new StringBuilder();
             string sqlCondition = string.Empty;
 
@@ -42,15 +28,13 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "ModuleName like concat('%',@ModuleName,'%')", query.Criteria.ModuleName);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
             StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.IsParentNo);
-            StringHelper.ParameterAdd(builder, "App = @App", query.Criteria.App);
+            StringHelper.ParameterAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            #endregion
-
-            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
+            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,AppNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
                 (select count(Id) from sys_module where ParentNo=a.ModuleNo) ChildrenCount
                 from sys_module a"
                 + sqlCondition;
@@ -82,13 +66,13 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "ModuleName like concat('%',@ModuleName,'%')", query.Criteria.ModuleName);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
             StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.IsParentNo);
-            StringHelper.ParameterAdd(builder, "App = @App", query.Criteria.App);
+            StringHelper.ParameterAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
+            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,AppNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
                 (select count(Id) from sys_module where ParentNo=a.ModuleNo) ChildrenCount
                 from sys_module a"
                 + sqlCondition;
@@ -96,7 +80,7 @@ namespace Hiywin.FrameService
             {
                 try
                 {
-                    var modelList = await MysqlHelper.QueryPageAsync<SysModuleModel>(dbConn, "App asc,Sort asc", sql, query.PageModel, query.Criteria);
+                    var modelList = await MysqlHelper.QueryPageAsync<SysModuleModel>(dbConn, "AppNo asc,Sort asc", sql, query.PageModel, query.Criteria);
                     lr.Data = modelList.ToList<ISysModuleModel>();
                     lr.PageInfo = query.PageModel;
                 }
@@ -114,10 +98,10 @@ namespace Hiywin.FrameService
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_module(ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,App,Creator,CreateName,CreateTime,Sort,IsDelete,RouterName)
-                values(@ModuleNo,@ModuleName,@ParentNo,@Icon,@Url,@Category,@Target,@IsResource,@App,@Creator,@CreateName,@CreateTime,@Sort,@IsDelete,@RouterName)";
+            string sqli = @"insert into sys_module(ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,AppNo,Creator,CreateName,CreateTime,Sort,IsDelete,RouterName)
+                values(@ModuleNo,@ModuleName,@ParentNo,@Icon,@Url,@Category,@Target,@IsResource,@AppNo,@Creator,@CreateName,@CreateTime,@Sort,@IsDelete,@RouterName)";
             string sqlu = @"update sys_module set ModuleName=@ModuleName,ParentNo=@ParentNo,Icon=@Icon,Url=@Url,Category=@Category,Target=@Target,IsResource=@IsResource,
-                App=@App,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,Sort=@Sort,IsDelete=@IsDelete,RouterName=@RouterName
+                AppNo=@AppNo,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,Sort=@Sort,IsDelete=@IsDelete,RouterName=@RouterName
                 where ModuleNo=@ModuleNo";
             string sqlc = @"select Id from sys_module where ModuleNo=@ModuleNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))

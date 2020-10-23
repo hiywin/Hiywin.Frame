@@ -28,7 +28,7 @@ namespace Hiywin.IFrameManager
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<ListResult<SysModuleTreeDto>> GetModuleTreeAsync(QueryData<SysModuleTreeQuery> query);
+        Task<ListResult<SysModuleTreeDto>> GetModuleTreeAsync(QueryData<SysModuleTreeParam> query);
 
         /// <summary>
         /// 新增或更新模块信息

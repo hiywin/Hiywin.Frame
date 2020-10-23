@@ -15,7 +15,7 @@ namespace Hiywin.Entities.Frame
         int Category { get; set; }
         string Target { get; set; }
         int IsResource { get; set; }
-        int App { get; set; }
+        string AppNo { get; set; }
         int Sort { get; set; }
         string Creator { get; set; }
         string CreateName { get; set; }

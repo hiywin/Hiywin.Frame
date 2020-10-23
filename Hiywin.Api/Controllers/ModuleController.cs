@@ -39,7 +39,7 @@ namespace Hiywin.Api.Controllers
                     ModuleNo = model.ModuleNo,
                     ModuleName = model.ModuleName,
                     ParentNo = model.ParentNo,
-                    App = model.App,
+                    AppNo = model.AppNo,
                     IsDelete = model.IsDelete,
                     IsParentNo = model.IsParentNo,
                 },
@@ -66,7 +66,7 @@ namespace Hiywin.Api.Controllers
                     ModuleNo = model.ModuleNo,
                     ModuleName = model.ModuleName,
                     IsDelete = model.IsDelete,
-                    App = model.App,
+                    AppNo = model.AppNo,
                     ParentNo = model.ParentNo,
                     IsParentNo = model.IsParentNo
                 }
@@ -80,11 +80,11 @@ namespace Hiywin.Api.Controllers
         [Authorize,HttpPost,Route("get_modules_tree")]
         public async Task<ActionResult> GetModulesTreeAsync(GetModuleTreeViewModel model)
         {
-            var query = new QueryData<SysModuleTreeQuery>()
+            var query = new QueryData<SysModuleTreeParam>()
             {
-                Criteria = new SysModuleTreeQuery()
+                Criteria = new SysModuleTreeParam()
                 {
-                    App = model.App,
+                    AppNo = model.AppNo,
                     ModuleName = model.ModuleName
                 }
             };
@@ -113,7 +113,7 @@ namespace Hiywin.Api.Controllers
                     Category = model.Category,
                     Target = model.Target,
                     IsResource = model.IsResource,
-                    App = model.App,
+                    AppNo = model.AppNo,
                     IsDelete = model.IsDelete,
                     Sort = model.Sort,
                     RouterName = model.RouterName

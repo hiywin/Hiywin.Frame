@@ -1,4 +1,5 @@
 ﻿using Hiywin.Common.Data;
+using Hiywin.Dtos.Structs;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameService.Structs;
 using System;
@@ -39,6 +40,13 @@ namespace Hiywin.IFrameManager
         Task<ErrData<bool>> RoleDeleteAsync(QueryData<SysRoleDeleteQuery> query);
 
         /// <summary>
+        ///获取全部角色模块列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ListResult<ISysRoleModuleModel>> GetRoleModuleAllAsync(QueryData<SysRoleModuleQuery> query);
+
+        /// <summary>
         /// 分页获取角色模块列表
         /// </summary>
         /// <param name="query"></param>
@@ -51,5 +59,19 @@ namespace Hiywin.IFrameManager
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ListResult<ISysRolePowerModel>> GetRolePowerAllAsync(QueryData<SysRolePowerQuery> query);
+
+        /// <summary>
+        /// 新增或修改角色模块权限
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> RoleModuleSaveOrUpdateAsync(QueryData<SysRoleModuleSaveOrUpdateQuery> query);
+
+        /// <summary>
+        /// 新增或修改角色按钮权限
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> RolePowerSaveOrUpdateAsync(QueryData<SysRolePowerParam> query);
     }
 }

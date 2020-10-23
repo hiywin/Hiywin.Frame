@@ -16,7 +16,7 @@ namespace Hiywin.Models.Frame
         public int Category { get; set; }
         public string Target { get; set; }
         public int IsResource { get; set; }
-        public int App { get; set; }
+        public string AppNo { get; set; }
         public string Creator { get; set; }
         public string CreateName { get; set; }
         public DateTime CreateTime { get; set; }
