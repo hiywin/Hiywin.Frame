@@ -148,40 +148,48 @@ namespace Hiywin.FrameService
             var result = new DataResult<int>();
 
             string sqld = @"delete from sys_role where RoleNo=@RoleNo";
-            string sqlu = @"update sys_role set IsDelete=@IsDelete where RoleNo=@RoleNo";
+            string sqldm = @"delete from sys_rolemodule where RoleNo=@RoleNo";
+            string sqldp = @"delete from sys_rolepower where RoleNo=@RoleNo";
             string sqlc = @"select Id from sys_role where RoleNo=@RoleNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
             {
+                IDbTransaction transaction = dbConn.BeginTransaction();
                 try
                 {
-                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria, transaction);
                     if (result.Data <= 0)
                     {
                         result.SetErr("角色不存在或已被删除，请重试！", -101);
+                        transaction.Rollback();
                         return result;
                     }
-                    if (query.Criteria.IsDelete)
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria, transaction);
+                    if (result.Data <= 0)
                     {
-                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqlu, query.Criteria);
-                        if (result.Data <= 0)
-                        {
-                            result.SetErr("删除失败！", -101);
-                            return result;
-                        }
+                        result.SetErr("删除角色失败！", -101);
+                        transaction.Rollback();
+                        return result;
                     }
-                    else
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqldm, query.Criteria, transaction);
+                    if (result.Data < 0)
                     {
-                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria);
-                        if (result.Data <= 0)
-                        {
-                            result.SetErr("删除失败！", -101);
-                            return result;
-                        }
+                        result.SetErr("删除模块权限失败！", -101);
+                        transaction.Rollback();
+                        return result;
                     }
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqldp, query.Criteria, transaction);
+                    if (result.Data < 0)
+                    {
+                        result.SetErr("删除按钮权限失败！", -101);
+                        transaction.Rollback();
+                        return result;
+                    }
+                    transaction.Commit();
                 }
                 catch (Exception ex)
                 {
                     result.SetErr(ex, -500);
+                    transaction.Rollback();
                     result.Data = -1;
                 }
             }
@@ -405,6 +413,53 @@ namespace Hiywin.FrameService
                 {
                     transaction.Rollback();
                     result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> RoleModuleDeleteAsync(QueryData<SysRoleModuleDeleteQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqld = @"delete from sys_rolemodule where RoleNo=@RoleNo and ModuleNo=@ModuleNo";
+            string sqldp = @"delete from sys_rolepower where RoleNo=@RoleNo
+                and PowerNo in (select PowerNo from sys_power where ModuleNo=@ModuleNo)";
+            string sqlc = @"select Id from sys_rolemodule where RoleNo=@RoleNo and ModuleNo=@ModuleNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria, transaction);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("模块权限不存在或已被删除，请重试！", -101);
+                        transaction.Rollback();
+                        return result;
+                    }
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria, transaction);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("删除模块权限失败！", -101);
+                        transaction.Rollback();
+                        return result;
+                    }
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqldp, query.Criteria, transaction);
+                    if (result.Data < 0)
+                    {
+                        result.SetErr("删除按钮权限失败！", -101);
+                        transaction.Rollback();
+                        return result;
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    transaction.Rollback();
                     result.Data = -1;
                 }
             }

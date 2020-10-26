@@ -258,5 +258,24 @@ namespace Hiywin.FrameManager
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return result;
         }
+
+        public async Task<ErrData<bool>> RoleModuleDeleteAsync(QueryData<SysRoleModuleDeleteQuery> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            var res = await _service.RoleModuleDeleteAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(false, res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                result.SetInfo(true, "删除成功！", 200);
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
     }
 }

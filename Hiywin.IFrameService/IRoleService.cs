@@ -72,5 +72,12 @@ namespace Hiywin.IFrameService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<int>> RolePowerSaveOrUpdateAsync(QueryData<SysRolePowerSaveOrUpdateQuery> query);
+
+        /// <summary>
+        /// 删除模块权限及所属按钮权限
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> RoleModuleDeleteAsync(QueryData<SysRoleModuleDeleteQuery> query);
     }
 }

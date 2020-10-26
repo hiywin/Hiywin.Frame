@@ -93,8 +93,7 @@ namespace Hiywin.Api.Controllers
             {
                 Criteria = new SysRoleDeleteQuery()
                 {
-                    RoleNo = model.RoleNo,
-                    IsDelete = model.IsDelete
+                    RoleNo = model.RoleNo
                 }
             };
             var result = await _manager.RoleDeleteAsync(query);
@@ -190,6 +189,22 @@ namespace Hiywin.Api.Controllers
                 }
             };
             var result = await _manager.RolePowerSaveOrUpdateAsync(query);
+
+            return Ok(result);
+        }
+
+        [Authorize,HttpPost,Route("role_module_delete")]
+        public async Task<ActionResult> RoleModuleDeleteAsync(RoleModuleDeleteViewModel model)
+        {
+            var query = new QueryData<SysRoleModuleDeleteQuery>()
+            {
+                Criteria = new SysRoleModuleDeleteQuery()
+                {
+                    RoleNo = model.RoleNo,
+                    ModuleNo = model.ModuleNo
+                }
+            };
+            var result = await _manager.RoleModuleDeleteAsync(query);
 
             return Ok(result);
         }
