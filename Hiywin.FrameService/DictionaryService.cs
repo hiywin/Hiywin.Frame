@@ -27,12 +27,12 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "TypeName like concat('%',@TypeName,'%')", query.Criteria.TypeName);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
             StringHelper.StringAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
-            StringHelper.StringAdd(builder, "App = @App", query.Criteria.App);
+            StringHelper.StringAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,App,Sort,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
+            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,AppNo,Sort,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
                 " from sys_dictionary"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -59,18 +59,17 @@ namespace Hiywin.FrameService
             StringBuilder builder = new StringBuilder();
             string sqlCondition = string.Empty;
 
-            StringHelper.ParameterAdd(builder, "App = @App", query.Criteria.App);
             StringHelper.ParameterAdd(builder, "Type = @Type", query.Criteria.Type);
             StringHelper.ParameterAdd(builder, "TypeName like concat('%',@TypeName,'%')", query.Criteria.TypeName);
             StringHelper.ParameterAdd(builder, "Content like concat('%',@Content,'%')", query.Criteria.Content);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
             StringHelper.StringAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
-            StringHelper.StringAdd(builder, "App = @App", query.Criteria.App);
+            StringHelper.StringAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,App,Sort,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
+            string sql = "select Id,DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,AppNo,Sort,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete" +
                 " from sys_dictionary"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
@@ -95,9 +94,9 @@ namespace Hiywin.FrameService
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_dictionary(DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,App,Sort,Creator,CreateName,CreateTime,IsDelete)
-                values(@DictionaryNo,@Type,@TypeName,@Content,@Code,@ParentNo,@Descr,@App,@Sort,@Creator,@CreateName,@CreateTime,@IsDelete)";
-            string sqlu = @"update sys_dictionary set Type=@Type,TypeName=@TypeName,Content=@Content,Code=@Code,ParentNo=@ParentNo,Descr=@Descr,App=@App,Sort=@Sort,
+            string sqli = @"insert into sys_dictionary(DictionaryNo,Type,TypeName,Content,Code,ParentNo,Descr,AppNo,Sort,Creator,CreateName,CreateTime,IsDelete)
+                values(@DictionaryNo,@Type,@TypeName,@Content,@Code,@ParentNo,@Descr,@AppNo,@Sort,@Creator,@CreateName,@CreateTime,@IsDelete)";
+            string sqlu = @"update sys_dictionary set Type=@Type,TypeName=@TypeName,Content=@Content,Code=@Code,ParentNo=@ParentNo,Descr=@Descr,AppNo=@AppNo,Sort=@Sort,
                 Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete
                 where DictionaryNo=@DictionaryNo";
             string sqlc = @"select Id from sys_dictionary where DictionaryNo=@DictionaryNo";

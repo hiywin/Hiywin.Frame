@@ -15,7 +15,7 @@ namespace Hiywin.Models.Frame
         public string Code { get; set; }
         public string ParentNo { get; set; }
         public string Descr { get; set; }
-        public string App { get; set; }
+        public string AppNo { get; set; }
         public int Sort { get; set; }
         public string Creator { get; set; }
         public string CreateName { get; set; }
