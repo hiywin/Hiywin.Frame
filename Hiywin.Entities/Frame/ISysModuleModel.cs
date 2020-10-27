@@ -12,9 +12,9 @@ namespace Hiywin.Entities.Frame
         string ParentNo { get; set; }
         string Icon { get; set; }
         string Url { get; set; }
-        int Category { get; set; }
+        string RouterName { get; set; }
+        string Category { get; set; }
         string Target { get; set; }
-        int IsResource { get; set; }
         string AppNo { get; set; }
         int Sort { get; set; }
         string Creator { get; set; }
@@ -24,7 +24,6 @@ namespace Hiywin.Entities.Frame
         string UpdateName { get; set; }
         DateTime? UpdateTime { get; set; }
         bool IsDelete { get; set; }
-        string RouterName { get; set; }
         int ChildrenCount { get; set; }
         bool HasChildren { get; set; }
     }

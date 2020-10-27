@@ -40,8 +40,7 @@ namespace Hiywin.Api.Controllers
                     ModuleName = model.ModuleName,
                     ParentNo = model.ParentNo,
                     AppNo = model.AppNo,
-                    IsDelete = model.IsDelete,
-                    IsParentNo = model.IsParentNo,
+                    IsDelete = model.IsDelete
                 },
                 PageModel = model.PageModel
             };
@@ -67,8 +66,7 @@ namespace Hiywin.Api.Controllers
                     ModuleName = model.ModuleName,
                     IsDelete = model.IsDelete,
                     AppNo = model.AppNo,
-                    ParentNo = model.ParentNo,
-                    IsParentNo = model.IsParentNo
+                    ParentNo = model.ParentNo
                 }
             };
 
@@ -112,7 +110,6 @@ namespace Hiywin.Api.Controllers
                     Url = model.Url,
                     Category = model.Category,
                     Target = model.Target,
-                    IsResource = model.IsResource,
                     AppNo = model.AppNo,
                     IsDelete = model.IsDelete,
                     Sort = model.Sort,

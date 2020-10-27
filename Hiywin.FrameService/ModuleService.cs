@@ -27,14 +27,14 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "ModuleNo = @ModuleNo", query.Criteria.ModuleNo);
             StringHelper.ParameterAdd(builder, "ModuleName like concat('%',@ModuleName,'%')", query.Criteria.ModuleName);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
-            StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.IsParentNo);
             StringHelper.ParameterAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
+            StringHelper.StringAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,AppNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
+            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,AppNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
                 (select count(Id) from sys_module where ParentNo=a.ModuleNo) ChildrenCount
                 from sys_module a"
                 + sqlCondition;
@@ -65,14 +65,14 @@ namespace Hiywin.FrameService
             StringHelper.ParameterAdd(builder, "ModuleNo = @ModuleNo", query.Criteria.ModuleNo);
             StringHelper.ParameterAdd(builder, "ModuleName like concat('%',@ModuleName,'%')", query.Criteria.ModuleName);
             StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
-            StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.IsParentNo);
             StringHelper.ParameterAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
+            StringHelper.StringAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
 
             if (builder.Length > 0)
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,AppNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
+            string sql = @"select Id,ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,AppNo,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete,Sort,RouterName,
                 (select count(Id) from sys_module where ParentNo=a.ModuleNo) ChildrenCount
                 from sys_module a"
                 + sqlCondition;
@@ -98,9 +98,9 @@ namespace Hiywin.FrameService
         {
             var result = new DataResult<int>();
 
-            string sqli = @"insert into sys_module(ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,IsResource,AppNo,Creator,CreateName,CreateTime,Sort,IsDelete,RouterName)
-                values(@ModuleNo,@ModuleName,@ParentNo,@Icon,@Url,@Category,@Target,@IsResource,@AppNo,@Creator,@CreateName,@CreateTime,@Sort,@IsDelete,@RouterName)";
-            string sqlu = @"update sys_module set ModuleName=@ModuleName,ParentNo=@ParentNo,Icon=@Icon,Url=@Url,Category=@Category,Target=@Target,IsResource=@IsResource,
+            string sqli = @"insert into sys_module(ModuleNo,ModuleName,ParentNo,Icon,Url,Category,Target,AppNo,Creator,CreateName,CreateTime,Sort,IsDelete,RouterName)
+                values(@ModuleNo,@ModuleName,@ParentNo,@Icon,@Url,@Category,@Target,@AppNo,@Creator,@CreateName,@CreateTime,@Sort,@IsDelete,@RouterName)";
+            string sqlu = @"update sys_module set ModuleName=@ModuleName,ParentNo=@ParentNo,Icon=@Icon,Url=@Url,Category=@Category,Target=@Target,
                 AppNo=@AppNo,Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,Sort=@Sort,IsDelete=@IsDelete,RouterName=@RouterName
                 where ModuleNo=@ModuleNo";
             string sqlc = @"select Id from sys_module where ModuleNo=@ModuleNo";

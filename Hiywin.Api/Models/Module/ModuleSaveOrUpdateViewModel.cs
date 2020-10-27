@@ -14,7 +14,7 @@ namespace Hiywin.Api.Models.Module
         public string ParentNo { get; set; }
         public string Icon { get; set; }
         public string Url { get; set; }
-        public int Category { get; set; }
+        public string Category { get; set; }
         public string Target { get; set; }
         public int IsResource { get; set; }
         [Required]

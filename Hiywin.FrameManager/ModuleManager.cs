@@ -121,8 +121,6 @@ namespace Hiywin.FrameManager
             {
                 Criteria = new SysModuleQuery()
                 {
-                    ParentNo = string.Empty,
-                    IsParentNo = null,
                     IsDelete = false,
                     AppNo = query.Criteria.AppNo
                 }
