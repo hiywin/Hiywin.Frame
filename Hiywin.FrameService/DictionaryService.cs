@@ -39,7 +39,7 @@ namespace Hiywin.FrameService
             {
                 try
                 {
-                    var modelList = await MysqlHelper.QueryListAsync<SysDictionaryModel>(dbConn, sql, "Id asc", query.Criteria);
+                    var modelList = await MysqlHelper.QueryListAsync<SysDictionaryModel>(dbConn, sql, "Sort asc", query.Criteria);
                     lr.Data = modelList.ToList<ISysDictionaryModel>();
                 }
                 catch (Exception ex)
@@ -76,7 +76,7 @@ namespace Hiywin.FrameService
             {
                 try
                 {
-                    var modelList = await MysqlHelper.QueryPageAsync<SysDictionaryModel>(dbConn, "Id desc", sql, query.PageModel, query.Criteria);
+                    var modelList = await MysqlHelper.QueryPageAsync<SysDictionaryModel>(dbConn, "Sort asc", sql, query.PageModel, query.Criteria);
                     lr.Data = modelList.ToList<ISysDictionaryModel>();
                     lr.PageInfo = query.PageModel;
                 }
