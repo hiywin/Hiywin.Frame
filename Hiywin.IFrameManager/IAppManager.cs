@@ -36,6 +36,6 @@ namespace Hiywin.IFrameManager
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<ErrData<bool>> CompanyDeleteAsync(QueryData<SysAppDeleteQuery> query);
+        Task<ErrData<bool>> AppDeleteAsync(QueryData<SysAppDeleteQuery> query);
     }
 }

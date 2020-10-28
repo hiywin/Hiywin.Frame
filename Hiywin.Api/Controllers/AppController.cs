@@ -96,7 +96,7 @@ namespace Hiywin.Api.Controllers
                     IsDelete = model.IsDelete
                 }
             };
-            var result = await _manager.CompanyDeleteAsync(query);
+            var result = await _manager.AppDeleteAsync(query);
 
             return Ok(result);
         }

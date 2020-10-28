@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace Hiywin.FrameManager
 {
-    public class AppManager : IAppManager
+    public class PositionManager : IPositionManager
     {
-        private readonly IAppService _service;
-        public AppManager(IAppService service)
+        private readonly IPositionService _service;
+        public PositionManager(IPositionService service)
         {
             _service = service;
         }
 
-        public async Task<ListResult<ISysAppModel>> GetAppAllAsync(QueryData<SysAppQuery> query)
+        public async Task<ListResult<ISysPositionModel>> GetPositionAllAsync(QueryData<SysPositionQuery> query)
         {
-            var lr = new ListResult<ISysAppModel>();
+            var lr = new ListResult<ISysPositionModel>();
             var dt = DateTime.Now;
 
-            var res = await _service.GetAppsAllAsync(query);
+            var res = await _service.GetPositionsAllAsync(query);
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);
@@ -41,12 +41,12 @@ namespace Hiywin.FrameManager
             return lr;
         }
 
-        public async Task<ListResult<ISysAppModel>> GetAppPageAsync(QueryData<SysAppQuery> query)
+        public async Task<ListResult<ISysPositionModel>> GetPositionPageAsync(QueryData<SysPositionQuery> query)
         {
-            var lr = new ListResult<ISysAppModel>();
+            var lr = new ListResult<ISysPositionModel>();
             var dt = DateTime.Now;
 
-            var res = await _service.GetAppsPageAsync(query);
+            var res = await _service.GetPositionsPageAsync(query);
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);
@@ -65,7 +65,7 @@ namespace Hiywin.FrameManager
             return lr;
         }
 
-        public async Task<ErrData<bool>> AppSaveOrUpdateAsync(QueryData<SysAppSaveOrUpdateQuery> query)
+        public async Task<ErrData<bool>> PositionSaveOrUpdateAsync(QueryData<SysPositionSaveOrUpdateQuery> query)
         {
             var result = new ErrData<bool>();
             var dt = DateTime.Now;
@@ -77,7 +77,7 @@ namespace Hiywin.FrameManager
             query.Criteria.UpdateName = query.Extend.UserName;
             query.Criteria.UpdateTime = DateTime.Now;
 
-            var res = await _service.AppSaveOrUpdateAsync(query);
+            var res = await _service.PositionSaveOrUpdateAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(false, res.ErrMsg, res.ErrCode);
@@ -91,12 +91,12 @@ namespace Hiywin.FrameManager
             return result;
         }
 
-        public async Task<ErrData<bool>> AppDeleteAsync(QueryData<SysAppDeleteQuery> query)
+        public async Task<ErrData<bool>> PositionDeleteAsync(QueryData<SysPositionDeleteQuery> query)
         {
             var result = new ErrData<bool>();
             var dt = DateTime.Now;
 
-            var res = await _service.AppDeleteAsync(query);
+            var res = await _service.PositionDeleteAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(false, res.ErrMsg, res.ErrCode);
@@ -110,5 +110,46 @@ namespace Hiywin.FrameManager
             return result;
         }
 
+        public async Task<ListResult<ISysPositionRoleModel>> GetPositionRoleAllAsync(QueryData<SysPositionRoleQuery> query)
+        {
+            var lr = new ListResult<ISysPositionRoleModel>();
+            var dt = DateTime.Now;
+
+            var res = await _service.GetPositionRolesAllAsync(query);
+            if (res.HasErr)
+            {
+                lr.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                foreach (var item in res.Data)
+                {
+                    lr.Results.Add(item);
+                }
+                lr.SetInfo("成功", 200);
+            }
+
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
+        }
+
+        public async Task<ErrData<bool>> PositionRoleDeleteAsync(QueryData<SysPositionRoleDeleteQuery> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            var res = await _service.PositionRoleDeleteAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(false, res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                result.SetInfo(true, "删除成功！", 200);
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
     }
 }
