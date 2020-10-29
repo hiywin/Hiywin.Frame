@@ -72,7 +72,7 @@ namespace Hiywin.IFrameManager
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<ErrData<bool>> RolePowerSaveOrUpdateAsync(QueryData<SysRolePowerParam> query);
+        Task<ErrData<bool>> RolePowerSaveOrUpdateAsync(QueryData<SysRolePowerParams> param);
 
         /// <summary>
         /// 删除角色模块权限及所属按钮权限

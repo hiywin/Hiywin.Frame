@@ -11,8 +11,9 @@ namespace Hiywin.Models.Frame
         public string PositionNo { get; set; }
         public string RoleNo { get; set; }
         public string RoleName { get; set; }
+        public string AppNo { get; set; }
         public string Creator { get; set; }
         public string CreateName { get; set; }
-        public string CreateTime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

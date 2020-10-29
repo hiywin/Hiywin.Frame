@@ -78,9 +78,9 @@ namespace Hiywin.Api.Controllers
         [Authorize,HttpPost,Route("get_modules_tree")]
         public async Task<ActionResult> GetModulesTreeAsync(GetModuleTreeViewModel model)
         {
-            var query = new QueryData<SysModuleTreeParam>()
+            var query = new QueryData<SysModuleTreeParams>()
             {
-                Criteria = new SysModuleTreeParam()
+                Criteria = new SysModuleTreeParams()
                 {
                     AppNo = model.AppNo,
                     ModuleName = model.ModuleName

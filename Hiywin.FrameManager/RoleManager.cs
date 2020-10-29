@@ -219,7 +219,7 @@ namespace Hiywin.FrameManager
             return result;
         }
 
-        public async Task<ErrData<bool>> RolePowerSaveOrUpdateAsync(QueryData<SysRolePowerParam> param)
+        public async Task<ErrData<bool>> RolePowerSaveOrUpdateAsync(QueryData<SysRolePowerParams> param)
         {
             var result = new ErrData<bool>();
             var dt = DateTime.Now;

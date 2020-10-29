@@ -10,8 +10,9 @@ namespace Hiywin.Entities.Frame
         string PositionNo { get; set; }
         string RoleNo { get; set; }
         string RoleName { get; set; }
+        string AppNo { get; set; }
         string Creator { get; set; }
         string CreateName { get; set; }
-        string CreateTime { get; set; }
+        DateTime CreateTime { get; set; }
     }
 }

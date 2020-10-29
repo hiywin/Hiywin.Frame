@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hiywin.Dtos.Structs
 {
-    public class SysRolePowerParam
+    public class SysRolePowerParams
     {
         public string RoleNo { get; set; }
         public List<SysRolePowerDto> LstRolePower { get; set; }

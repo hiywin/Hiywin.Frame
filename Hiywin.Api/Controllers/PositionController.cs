@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hiywin.Api.Models.Position;
 using Hiywin.Common.Data;
 using Hiywin.Common.IoC;
+using Hiywin.Dtos.Structs;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService.Structs;
 using Microsoft.AspNetCore.Authorization;
@@ -114,6 +115,28 @@ namespace Hiywin.Api.Controllers
                 }
             };
             var result = await _manager.GetPositionRoleAllAsync(query);
+
+            return Ok(result);
+        }
+
+        [Authorize,HttpPost,Route("position_role_save_or_update")]
+        public async Task<ActionResult> PositionRoleSaveOrUpdateAsync(PositionRoleSaveOrUpdateViewModel model)
+        {
+            var query = new QueryData<SysPositionRoleParams>()
+            {
+                Criteria = new SysPositionRoleParams()
+                {
+                    PositionNo = model.PositionNo,
+                    AppNo = model.AppNo,
+                    LstPositionRole = model.LstPositionRole
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = CurrentUser.UserNo,
+                    UserName = CurrentUser.UserName
+                }
+            };
+            var result = await _manager.PositionRoleSaveOrUpdateAsync(query);
 
             return Ok(result);
         }

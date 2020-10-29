@@ -112,7 +112,7 @@ namespace Hiywin.FrameManager
             return result;
         }
 
-        public async Task<ListResult<SysModuleTreeDto>> GetModuleTreeAsync(QueryData<SysModuleTreeParam> query)
+        public async Task<ListResult<SysModuleTreeDto>> GetModuleTreeAsync(QueryData<SysModuleTreeParams> query)
         {
             var lr = new ListResult<SysModuleTreeDto>();
             var dt = DateTime.Now;

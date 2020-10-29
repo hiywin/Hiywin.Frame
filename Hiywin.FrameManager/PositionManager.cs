@@ -1,4 +1,6 @@
 ﻿using Hiywin.Common.Data;
+using Hiywin.Common.IoC;
+using Hiywin.Dtos.Structs;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService;
@@ -131,6 +133,46 @@ namespace Hiywin.FrameManager
 
             lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return lr;
+        }
+
+        public async Task<ErrData<bool>> PositionRoleSaveOrUpdateAsync(QueryData<SysPositionRoleParams> param)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            var lstInfo = new List<ISysPositionRoleModel>();
+            foreach (var item in param.Criteria.LstPositionRole)
+            {
+                var info = IoCContainer.Resolve<ISysPositionRoleModel>();
+                info.PositionNo = param.Criteria.PositionNo;
+                info.RoleNo = item.RoleNo;
+                info.RoleName = item.RoleName;
+                info.Creator = param.Extend.UserNo;
+                info.CreateName = param.Extend.UserName;
+                info.CreateTime = dt;
+                lstInfo.Add(info);
+            }
+            var query = new QueryData<SysPositionRoleSaveOrUpdateQuery>()
+            {
+                Criteria = new SysPositionRoleSaveOrUpdateQuery()
+                {
+                    PositionNo = param.Criteria.PositionNo,
+                    AppNo = param.Criteria.AppNo,
+                    LstPositionRole = lstInfo
+                }
+            };
+            var res = await _service.PositionRoleSaveOrUpdateAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(false, res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                result.SetInfo(true, "更新职业角色成功！", 200);
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
         }
 
         public async Task<ErrData<bool>> PositionRoleDeleteAsync(QueryData<SysPositionRoleDeleteQuery> query)

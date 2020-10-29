@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hiywin.Dtos.Structs
 {
-    public class SysModuleTreeParam
+    public class SysModuleTreeParams
     {
         public string ModuleName { get; set; }
         public string ParentNo { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Hiywin.Common.Data;
+using Hiywin.Dtos.Structs;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameService.Structs;
 using System;
@@ -44,6 +45,13 @@ namespace Hiywin.IFrameManager
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ListResult<ISysPositionRoleModel>> GetPositionRoleAllAsync(QueryData<SysPositionRoleQuery> query);
+
+        /// <summary>
+        /// 新增或修改职业角色
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> PositionRoleSaveOrUpdateAsync(QueryData<SysPositionRoleParams> param);
 
         /// <summary>
         /// 删除职位角色信息

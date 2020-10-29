@@ -202,16 +202,16 @@ namespace Hiywin.FrameService
             {
                 sqlCondition = " where " + builder.ToString();
             }
-            string sql = @"select a.Id,PositionNo,a.RoleNo,RoleName,a.Creator,a.CreateName,a.CreateTime 
-                from sys_positionrole 
-                a left join sys_role b 
+            string sql = @"select a.Id,PositionNo,a.RoleNo,RoleName,AppNo,a.Creator,a.CreateName,a.CreateTime 
+                from sys_positionrole a
+                left join sys_role b 
                 on a.RoleNo=b.RoleNo"
                 + sqlCondition;
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
             {
                 try
                 {
-                    var modelList = await MysqlHelper.QueryListAsync<SysPositionRoleModel>(dbConn, sql, "RoleName asc", query.Criteria);
+                    var modelList = await MysqlHelper.QueryListAsync<SysPositionRoleModel>(dbConn, sql, "AppNo asc,RoleName asc", query.Criteria);
                     lr.Data = modelList.ToList<ISysPositionRoleModel>();
                 }
                 catch (Exception ex)
@@ -222,6 +222,65 @@ namespace Hiywin.FrameService
             }
 
             return lr;
+        }
+
+        public async Task<DataResult<int>> PositionRoleSaveOrUpdateAsync(QueryData<SysPositionRoleSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_positionrole(PositionNo,RoleNo,Creator,CreateName,CreateTime)
+                values(@PositionNo,@RoleNo,@Creator,@CreateName,@CreateTime)";
+            string sqld = @"delete from sys_positionrole where PositionNo=@PositionNo and RoleNo=@RoleNo";
+            string sqlc = @"select PositionNo,a.RoleNo,RoleName
+                from sys_positionrole a left join sys_role b on a.RoleNo=b.RoleNo
+                where PositionNo=@PositionNo and AppNo=@AppNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    if (!string.IsNullOrEmpty(query.Criteria.PositionNo))
+                    {
+                        var positionRoles = await MysqlHelper.QueryListAsync<SysPositionRoleModel>(dbConn, sqlc, query.Criteria);
+                        var prs = positionRoles.ToList<ISysPositionRoleModel>();
+                        // 先删除职业所属平台关联的角色
+                        foreach (var model in prs)
+                        {
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, model, transaction);
+                            if (result.Data < 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 角色失败！", model.RoleName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                        // 新增选中的角色
+                        foreach (var model in query.Criteria.LstPositionRole)
+                        {
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
+                            if (result.Data < 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 角色失败！", model.RoleName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result.SetErr("未选择职业无法更新角色！", -101);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
         }
 
         public async Task<DataResult<int>> PositionRoleDeleteAsync(QueryData<SysPositionRoleDeleteQuery> query)

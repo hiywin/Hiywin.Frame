@@ -46,6 +46,13 @@ namespace Hiywin.IFrameService
         Task<DataResult<List<ISysPositionRoleModel>>> GetPositionRolesAllAsync(QueryData<SysPositionRoleQuery> query);
 
         /// <summary>
+        /// 新增职位角色
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> PositionRoleSaveOrUpdateAsync(QueryData<SysPositionRoleSaveOrUpdateQuery> query);
+
+        /// <summary>
         /// 删除职位角色信息
         /// </summary>
         /// <param name="query"></param>

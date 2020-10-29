@@ -175,9 +175,9 @@ namespace Hiywin.Api.Controllers
         [Authorize, HttpPost, Route("role_power_save_or_update")]
         public async Task<ActionResult> RolePowerSaveOrUpdateAsync(RolePowerSaveOrUpdateViewModel model)
         {
-            var query = new QueryData<SysRolePowerParam>()
+            var query = new QueryData<SysRolePowerParams>()
             {
-                Criteria = new SysRolePowerParam()
+                Criteria = new SysRolePowerParams()
                 {
                     RoleNo = model.RoleNo,
                     LstRolePower = model.LstRolePower
