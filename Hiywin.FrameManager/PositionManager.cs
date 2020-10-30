@@ -168,7 +168,7 @@ namespace Hiywin.FrameManager
             }
             else
             {
-                result.SetInfo(true, "更新职业角色成功！", 200);
+                result.SetInfo(true, "更新职位角色成功！", 200);
             }
 
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;

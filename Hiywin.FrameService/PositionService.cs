@@ -243,7 +243,7 @@ namespace Hiywin.FrameService
                     {
                         var positionRoles = await MysqlHelper.QueryListAsync<SysPositionRoleModel>(dbConn, sqlc, query.Criteria);
                         var prs = positionRoles.ToList<ISysPositionRoleModel>();
-                        // 先删除职业所属平台关联的角色
+                        // 先删除职位所属平台关联的角色
                         foreach (var model in prs)
                         {
                             result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, model, transaction);
@@ -268,7 +268,7 @@ namespace Hiywin.FrameService
                     }
                     else
                     {
-                        result.SetErr("未选择职业无法更新角色！", -101);
+                        result.SetErr("未选择职位无法更新角色！", -101);
                     }
                     transaction.Commit();
                 }

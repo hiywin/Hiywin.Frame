@@ -1,0 +1,196 @@
+﻿using Hiywin.Common;
+using Hiywin.Common.Data;
+using Hiywin.Common.Helpers;
+using Hiywin.Entities.Frame;
+using Hiywin.IFrameService;
+using Hiywin.IFrameService.Structs;
+using Hiywin.Models.Frame;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Hiywin.FrameService
+{
+    public class GroupService : IGroupService
+    {
+        public async Task<DataResult<List<ISysGroupModel>>> GetGroupsAllAsync(QueryData<SysGroupQuery> query)
+        {
+            var lr = new DataResult<List<ISysGroupModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "GroupNo = @GroupNo", query.Criteria.GroupNo);
+            StringHelper.ParameterAdd(builder, "GroupName like concat('%',@GroupName,'%')", query.Criteria.GroupName);
+            StringHelper.ParameterAdd(builder, "Code = @Code", query.Criteria.Code);
+            StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
+            StringHelper.ParameterAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
+            StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = @"select Id,GroupNo,GroupName,Code,Descr,ParentNo,AppNo,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete
+                from sys_group"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryListAsync<SysGroupModel>(dbConn, sql, "GroupName asc", query.Criteria);
+                    lr.Data = modelList.ToList<ISysGroupModel>();
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
+        public async Task<DataResult<List<ISysGroupModel>>> GetGroupsPageAsync(QueryData<SysGroupQuery> query)
+        {
+            var lr = new DataResult<List<ISysGroupModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "GroupNo = @GroupNo", query.Criteria.GroupNo);
+            StringHelper.ParameterAdd(builder, "GroupName like concat('%',@GroupName,'%')", query.Criteria.GroupName);
+            StringHelper.ParameterAdd(builder, "Code = @Code", query.Criteria.Code);
+            StringHelper.ParameterAdd(builder, "ParentNo = @ParentNo", query.Criteria.ParentNo);
+            StringHelper.ParameterAdd(builder, "AppNo = @AppNo", query.Criteria.AppNo);
+            StringHelper.ParameterAdd(builder, "IsDelete = @IsDelete", query.Criteria.IsDelete);
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = @"select Id,GroupNo,GroupName,Code,Descr,ParentNo,AppNo,Access,Creator,CreateName,CreateTime,Updator,UpdateName,UpdateTime,IsDelete
+                from sys_group"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryPageAsync<SysGroupModel>(dbConn, "GroupName asc", sql, query.PageModel, query.Criteria);
+                    lr.Data = modelList.ToList<ISysGroupModel>();
+                    lr.PageInfo = query.PageModel;
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
+        public async Task<DataResult<int>> GroupSaveOrUpdateAsync(QueryData<SysGroupSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_group(GroupNo,GroupName,Code,Descr,ParentNo,AppNo,Access,Creator,CreateName,CreateTime,IsDelete)
+                values(@GroupNo,@GroupName,@Code,@Descr,@ParentNo,@AppNo,@Access,@Creator,@CreateName,@CreateTime,@IsDelete)";
+            string sqlu = @"update sys_group set GroupName=@GroupName,Code=@Code,Descr=@Descr,ParentNo=@ParentNo,AppNo=@AppNo,Access=@Access,
+                Updator=@Updator,UpdateName=@UpdateName,UpdateTime=@UpdateTime,IsDelete=@IsDelete
+                where GroupNo=@GroupNo";
+            string sqlc = @"select Id from sys_group where GroupNo=@GroupNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                try
+                {
+                    // 新增
+                    if (string.IsNullOrEmpty(query.Criteria.GroupNo))
+                    {
+                        query.Criteria.GroupNo = Guid.NewGuid().ToString("N");
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("新增组织信息失败！", -101);
+                            return result;
+                        }
+                        else
+                        {
+                            result.SetErr("新增组织信息成功！", 200);
+                        }
+                    }
+                    else // 更新
+                    {
+                        result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("组织不存在或已被删除，请重试！", -101);
+                            return result;
+                        }
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqlu, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("更新组织信息失败！", -101);
+                            return result;
+                        }
+                        result.SetErr("更新组织信息成功！", 200);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> GroupDeleteAsync(QueryData<SysGroupDeleteQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqld = @"delete from sys_group where GroupNo=@GroupNo";
+            string sqlu = @"update sys_group set IsDelete=@IsDelete where GroupNo=@GroupNo";
+            string sqlc = @"select Id from sys_group where GroupNo=@GroupNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                try
+                {
+                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("组织不存在或已被删除，请重试！", -101);
+                        return result;
+                    }
+                    if (query.Criteria.IsDelete)
+                    {
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqlu, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("删除失败！", -101);
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria);
+                        if (result.Data <= 0)
+                        {
+                            result.SetErr("删除失败！", -101);
+                            return result;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+    }
+}
