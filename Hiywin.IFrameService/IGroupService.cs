@@ -37,5 +37,26 @@ namespace Hiywin.IFrameService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<int>> GroupDeleteAsync(QueryData<SysGroupDeleteQuery> query);
+
+        /// <summary>
+        /// 获取所有组织所属角色列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<ISysGroupRoleModel>>> GetGroupRolesAllAsync(QueryData<SysGroupRoleQuery> query);
+
+        /// <summary>
+        /// 新增组织角色
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> GroupRoleSaveOrUpdateAsync(QueryData<SysGroupRoleSaveOrUpdateQuery> query);
+
+        /// <summary>
+        /// 删除组织角色信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> GroupRoleDeleteAsync(QueryData<SysGroupRoleDeleteQuery> query);
     }
 }

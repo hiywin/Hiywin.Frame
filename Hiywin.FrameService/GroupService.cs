@@ -192,5 +192,132 @@ namespace Hiywin.FrameService
 
             return result;
         }
+
+        public async Task<DataResult<List<ISysGroupRoleModel>>> GetGroupRolesAllAsync(QueryData<SysGroupRoleQuery> query)
+        {
+            var lr = new DataResult<List<ISysGroupRoleModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "GroupNo = @GroupNo", query.Criteria.GroupNo);
+            StringHelper.ParameterAdd(builder, "RoleName like concat('%',@RoleName,'%')", query.Criteria.RoleName);
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = @"select a.Id,GroupNo,a.RoleNo,RoleName,a.Creator,a.CreateName,a.CreateTime
+                from sys_grouprole a
+                left join sys_role b
+                on a.RoleNo=b.RoleNo"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryListAsync<SysGroupRoleModel>(dbConn, sql, "RoleName asc", query.Criteria);
+                    lr.Data = modelList.ToList<ISysGroupRoleModel>();
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
+        public async Task<DataResult<int>> GroupRoleSaveOrUpdateAsync(QueryData<SysGroupRoleSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_grouprole(GroupNo,RoleNo,Creator,CreateName,CreateTime)
+                values(@GroupNo,@RoleNo,@Creator,@CreateName,@CreateTime)";
+            string sqld = @"delete from sys_grouprole where GroupNo=@GroupNo and RoleNo=@RoleNo";
+            string sqlc = @"select GroupNo,a.RoleNo,RoleName
+                from sys_grouprole a left join sys_role b on a.RoleNo=b.RoleNo
+                where GroupNo=@GroupNo and AppNo=@AppNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    if (!string.IsNullOrEmpty(query.Criteria.GroupNo))
+                    {
+                        var groupRoles = await MysqlHelper.QueryListAsync<SysGroupRoleModel>(dbConn, sqlc, query.Criteria);
+                        var grs = groupRoles.ToList<ISysGroupRoleModel>();
+                        // 先删除职位所属平台关联的角色
+                        foreach (var model in grs)
+                        {
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, model, transaction);
+                            if (result.Data < 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 角色失败！", model.RoleName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                        // 新增选中的角色
+                        foreach (var model in query.Criteria.LstGroupRole)
+                        {
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
+                            if (result.Data < 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 角色失败！", model.RoleName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result.SetErr("未选择组织无法更新角色！", -101);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> GroupRoleDeleteAsync(QueryData<SysGroupRoleDeleteQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqld = @"delete from sys_grouprole where GroupNo=@GroupNo and RoleNo=@RoleNo";
+            string sqlc = @"select Id from sys_grouprole where GroupNo=@GroupNo and RoleNo=@RoleNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                try
+                {
+                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("角色不存在或已被删除，请重试！", -101);
+                        return result;
+                    }
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("删除失败！", -101);
+                        return result;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
     }
 }
