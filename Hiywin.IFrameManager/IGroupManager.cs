@@ -1,4 +1,5 @@
 ﻿using Hiywin.Common.Data;
+using Hiywin.Dtos.Structs;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameService.Structs;
 using System;
@@ -37,5 +38,47 @@ namespace Hiywin.IFrameManager
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ErrData<bool>> GroupDeleteAsync(QueryData<SysGroupDeleteQuery> query);
+
+        /// <summary>
+        /// 获取所有组织所属角色列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ListResult<ISysGroupRoleModel>> GetGroupRolesAllAsync(QueryData<SysGroupRoleQuery> query);
+
+        /// <summary>
+        /// 更新组织角色
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> GroupRoleSaveOrUpdateAsync(QueryData<SysGroupRoleParams> param);
+
+        /// <summary>
+        /// 删除组织角色信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> GroupRoleDeleteAsync(QueryData<SysGroupRoleDeleteQuery> query);
+
+        /// <summary>
+        /// 获取所有组织所属用户列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ListResult<ISysGroupUserModel>> GetGroupUsersAllAsync(QueryData<SysGroupUserQuery> query);
+
+        /// <summary>
+        /// 更新组织用户
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> GroupUserSaveOrUpdateAsync(QueryData<SysGroupUserParams> param);
+
+        /// <summary>
+        /// 删除组织用户信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> GroupUserDeleteAsync(QueryData<SysGroupUserDeleteQuery> query);
     }
 }

@@ -243,7 +243,7 @@ namespace Hiywin.FrameService
                 IDbTransaction transaction = dbConn.BeginTransaction();
                 try
                 {
-                    if (!string.IsNullOrEmpty(query.Criteria.GroupNo))
+                    if (!string.IsNullOrEmpty(query.Criteria.GroupNo) || !string.IsNullOrEmpty(query.Criteria.AppNo))
                     {
                         var groupRoles = await MysqlHelper.QueryListAsync<SysGroupRoleModel>(dbConn, sqlc, query.Criteria);
                         var grs = groupRoles.ToList<ISysGroupRoleModel>();
@@ -262,7 +262,7 @@ namespace Hiywin.FrameService
                         foreach (var model in query.Criteria.LstGroupRole)
                         {
                             result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
-                            if (result.Data < 0)
+                            if (result.Data <= 0)
                             {
                                 result.SetErr(string.Format("更新 {0} 角色失败！", model.RoleName), -101);
                                 transaction.Rollback();
@@ -272,7 +272,7 @@ namespace Hiywin.FrameService
                     }
                     else
                     {
-                        result.SetErr("未选择组织无法更新角色！", -101);
+                        result.SetErr("未选择组织或平台无法更新角色！", -101);
                     }
                     transaction.Commit();
                 }
@@ -301,6 +301,124 @@ namespace Hiywin.FrameService
                     if (result.Data <= 0)
                     {
                         result.SetErr("角色不存在或已被删除，请重试！", -101);
+                        return result;
+                    }
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("删除失败！", -101);
+                        return result;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<List<ISysGroupUserModel>>> GetGroupUsersAllAsync(QueryData<SysGroupUserQuery> query)
+        {
+            var lr = new DataResult<List<ISysGroupUserModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "GroupNo = @GroupNo", query.Criteria.GroupNo);
+            StringHelper.ParameterAdd(builder, "UserName like concat('%',@UserName,'%')", query.Criteria.UserName);
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = @"select a.Id,GroupNo,a.UserNo,UserName,GroupMaster,GroupManager,a.Creator,a.CreateName,a.CreateTime
+                from sys_groupuser a
+                left join sys_user b
+                on a.UserNo=b.UserNo"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryListAsync<SysGroupUserModel>(dbConn, sql, "UserName asc", query.Criteria);
+                    lr.Data = modelList.ToList<ISysGroupUserModel>();
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
+        public async Task<DataResult<int>> GroupUserSaveOrUpdateAsync(QueryData<SysGroupUserSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_groupuser(GroupNo,UserNo,GroupMaster,GroupManager,Creator,CreateName,CreateTime)
+                values(@GroupNo,@UserNo,@GroupMaster,@GroupManager,@Creator,@CreateName,@CreateTime)";
+            string sqld = @"delete from sys_groupuser where GroupNo=@GroupNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    if (!string.IsNullOrEmpty(query.Criteria.GroupNo))
+                    {
+                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria, transaction);
+                        if (result.Data < 0)
+                        {
+                            result.SetErr("删除所属用户失败！");
+                            transaction.Rollback();
+                            return result;
+                        }
+                        // 新增选中的角色
+                        foreach (var model in query.Criteria.LstGroupUser)
+                        {
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
+                            if (result.Data < 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 用户失败！", model.UserName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result.SetErr("未选择组织无法更新用户！", -101);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> GroupUserDeleteAsync(QueryData<SysGroupUserDeleteQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqld = @"delete from sys_groupuser where GroupNo=@GroupNo and UserNo=@UserNo";
+            string sqlc = @"select Id from sys_groupuser where GroupNo=@GroupNo and UserNo=@UserNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                try
+                {
+                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("用户不存在或已被删除，请重试！", -101);
                         return result;
                     }
                     result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria);
