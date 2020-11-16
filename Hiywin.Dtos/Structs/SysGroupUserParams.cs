@@ -8,6 +8,7 @@ namespace Hiywin.Dtos.Structs
     public class SysGroupUserParams
     {
         public string GroupNo { get; set; }
+        public string CompanyNo { get; set; }
         public List<SysGroupUserDto> LstGroupUser { get; set; }
     }
 }

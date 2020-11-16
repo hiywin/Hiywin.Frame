@@ -186,6 +186,7 @@ namespace Hiywin.Api.Controllers
                 Criteria = new SysGroupUserParams()
                 {
                     GroupNo = model.GroupNo,
+                    CompanyNo = model.CompanyNo,
                     LstGroupUser = model.LstGroupUser
                 },
                 Extend = new QueryExtend()

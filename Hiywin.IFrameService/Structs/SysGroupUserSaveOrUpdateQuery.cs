@@ -8,6 +8,7 @@ namespace Hiywin.IFrameService.Structs
     public class SysGroupUserSaveOrUpdateQuery
     {
         public string GroupNo { get; set; }
+        public string CompanyNo { get; set; }
         public List<ISysGroupUserModel> LstGroupUser { get; set; }
     }
 }

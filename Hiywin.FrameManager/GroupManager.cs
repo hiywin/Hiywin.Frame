@@ -245,6 +245,7 @@ namespace Hiywin.FrameManager
                 Criteria = new SysGroupUserSaveOrUpdateQuery()
                 {
                     GroupNo = param.Criteria.GroupNo,
+                    CompanyNo = param.Criteria.CompanyNo,
                     LstGroupUser = lstInfo
                 }
             };

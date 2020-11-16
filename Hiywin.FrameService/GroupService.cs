@@ -361,26 +361,35 @@ namespace Hiywin.FrameService
 
             string sqli = @"insert into sys_groupuser(GroupNo,UserNo,GroupMaster,GroupManager,Creator,CreateName,CreateTime)
                 values(@GroupNo,@UserNo,@GroupMaster,@GroupManager,@Creator,@CreateName,@CreateTime)";
-            string sqld = @"delete from sys_groupuser where GroupNo=@GroupNo";
+            string sqld = @"delete from sys_groupuser where GroupNo=@GroupNo and UserNo=@UserNo";
+            string sqlc = @"select GroupNo,a.UserNo,UserName
+                from sys_groupuser a left join sys_user b on a.UserNo=b.UserNo
+                where GroupNo=@GroupNo and CompanyNo=@CompanyNo";
             using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
             {
                 IDbTransaction transaction = dbConn.BeginTransaction();
                 try
                 {
-                    if (!string.IsNullOrEmpty(query.Criteria.GroupNo))
+                    if (!string.IsNullOrEmpty(query.Criteria.GroupNo) || !string.IsNullOrEmpty(query.Criteria.CompanyNo))
                     {
-                        result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria, transaction);
-                        if (result.Data < 0)
+                        var groupUsers = await MysqlHelper.QueryListAsync<SysGroupUserModel>(dbConn, sqlc, query.Criteria);
+                        var users = groupUsers.ToList<ISysGroupUserModel>();
+                        // 先删除所选公司下的用户
+                        foreach (var model in users)
                         {
-                            result.SetErr("删除所属用户失败！");
-                            transaction.Rollback();
-                            return result;
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, model, transaction);
+                            if (result.Data < 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 用户失败！", model.UserName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
                         }
-                        // 新增选中的角色
+                        // 新增选中的用户
                         foreach (var model in query.Criteria.LstGroupUser)
                         {
                             result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
-                            if (result.Data < 0)
+                            if (result.Data <= 0)
                             {
                                 result.SetErr(string.Format("更新 {0} 用户失败！", model.UserName), -101);
                                 transaction.Rollback();
@@ -390,7 +399,7 @@ namespace Hiywin.FrameService
                     }
                     else
                     {
-                        result.SetErr("未选择组织无法更新用户！", -101);
+                        result.SetErr("未选择组织或公司无法更新用户！", -101);
                     }
                     transaction.Commit();
                 }

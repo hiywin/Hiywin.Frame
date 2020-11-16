@@ -12,6 +12,8 @@ namespace Hiywin.Api.Models.Group
         [Required]
         public string GroupNo { get; set; }
         [Required]
+        public string CompanyNo { get; set; }
+        [Required]
         public List<SysGroupUserDto> LstGroupUser { get; set; }
     }
 }
