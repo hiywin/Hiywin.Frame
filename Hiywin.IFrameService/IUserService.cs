@@ -37,5 +37,26 @@ namespace Hiywin.IFrameService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<int>> UserDeleteAsync(QueryData<SysUserDeleteQuery> query);
+
+        /// <summary>
+        /// 获取所有用户角色列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<ISysUserRoleModel>>> GetUserRolesAllAsync(QueryData<SysUserRoleQuery> query);
+
+        /// <summary>
+        /// 用户角色保存与更新
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> UserRoleSaveOrUpdateAsync(QueryData<SysUserRoleSaveOrUpdateQuery> query);
+
+        /// <summary>
+        /// 删除用户角色
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> UserRoleDeleteAsync(QueryData<SysUserRoleDeleteQuery> query);
     }
 }

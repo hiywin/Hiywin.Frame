@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hiywin.Api.Models.User;
 using Hiywin.Common.Data;
 using Hiywin.Common.IoC;
+using Hiywin.Dtos.Structs;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService.Structs;
 using Microsoft.AspNetCore.Authorization;
@@ -130,6 +131,60 @@ namespace Hiywin.Api.Controllers
                 }
             };
             var result = await _manager.UserDeleteAsync(query);
+
+            return Ok(result);
+        }
+
+        [Authorize,HttpPost,Route("get_user_roles_all")]
+        public async Task<ActionResult> GetUserRolesAllAsync(GetUserRoleAllViewModel model)
+        {
+            var query = new QueryData<SysUserRoleQuery>
+            {
+                Criteria = new SysUserRoleQuery()
+                {
+                    UserNo = model.UserNo,
+                    RoleName = model.RoleName
+                }
+            };
+            var result = await _manager.GetUserRolesAllAsync(query);
+
+            return Ok(result);
+        }
+
+        [Authorize,HttpPost,Route("user_role_save_or_update")]
+        public async Task<ActionResult> UserRoleSaveOrUpdateAsync(UserRoleSaveOrUpdateViewModel model)
+        {
+            var query = new QueryData<SysUserRoleParams>()
+            {
+                Criteria = new SysUserRoleParams()
+                {
+                    UserNo = model.UserNo,
+                    AppNo = model.AppNo,
+                    LstUserRole = model.LstUserRole
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = CurrentUser.UserNo,
+                    UserName = CurrentUser.UserName
+                }
+            };
+            var result = await _manager.UserRoleSaveOrUpdateAsync(query);
+
+            return Ok(result);
+        }
+
+        [Authorize,HttpPost,Route("user_role_delete")]
+        public async Task<ActionResult> UserRoleDeleteAsync(UserRoleDeleteViewModel model)
+        {
+            var query = new QueryData<SysUserRoleDeleteQuery>()
+            {
+                Criteria = new SysUserRoleDeleteQuery()
+                {
+                    UserNo = model.UserNo,
+                    RoleNo = model.RoleNo
+                }
+            };
+            var result = await _manager.UserRoleDeleteAsync(query);
 
             return Ok(result);
         }

@@ -7,6 +7,10 @@ namespace Hiywin.Models.Frame
 {
     public class SysUserModel: ISysUserModel
     {
+        public SysUserModel()
+        {
+            LstUserRole = new List<ISysUserRoleModel>();
+        }
         public int Id { get; set; }
         public string UserNo { get; set; }
         public string UserName { get; set; }
@@ -37,5 +41,6 @@ namespace Hiywin.Models.Frame
         public string UpdateName { get; set; }
         public DateTime? UpdateTime { get; set; }
         public bool IsDelete { get; set; }
+        public List<ISysUserRoleModel> LstUserRole { get; set; }
     }
 }

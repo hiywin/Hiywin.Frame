@@ -1,4 +1,6 @@
 ﻿using Hiywin.Common.Data;
+using Hiywin.Common.IoC;
+using Hiywin.Dtos.Structs;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameManager;
 using Hiywin.IFrameService;
@@ -55,6 +57,15 @@ namespace Hiywin.FrameManager
             {
                 foreach (var item in res.Data)
                 {
+                    var queryRole = new QueryData<SysUserRoleQuery>()
+                    {
+                        Criteria = new SysUserRoleQuery()
+                        {
+                            UserNo = item.UserNo
+                        }
+                    };
+                    var roleResult= await _service.GetUserRolesAllAsync(queryRole);
+                    item.LstUserRole = roleResult.Data;
                     lr.Results.Add(item);
                 }
                 lr.PageModel = res.PageInfo;
@@ -146,6 +157,88 @@ namespace Hiywin.FrameManager
             var dt = DateTime.Now;
 
             var res = await _service.UserDeleteAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(false, res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                result.SetInfo(true, "删除成功！", 200);
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ListResult<ISysUserRoleModel>> GetUserRolesAllAsync(QueryData<SysUserRoleQuery> query)
+        {
+            var lr = new ListResult<ISysUserRoleModel>();
+            var dt = DateTime.Now;
+
+            var res = await _service.GetUserRolesAllAsync(query);
+            if (res.HasErr)
+            {
+                lr.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                foreach (var item in res.Data)
+                {
+                    lr.Results.Add(item);
+                }
+                lr.SetInfo("成功", 200);
+            }
+
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
+        }
+
+        public async Task<ErrData<bool>> UserRoleSaveOrUpdateAsync(QueryData<SysUserRoleParams> param)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            var lstInfo = new List<ISysUserRoleModel>();
+            foreach (var item in param.Criteria.LstUserRole)
+            {
+                var info = IoCContainer.Resolve<ISysUserRoleModel>();
+                info.UserNo = param.Criteria.UserNo;
+                info.RoleNo = item.RoleNo;
+                info.RoleName = item.RoleName;
+                info.Creator = param.Extend.UserNo;
+                info.CreateName = param.Extend.UserName;
+                info.CreateTime = dt;
+                lstInfo.Add(info);
+            }
+            var query = new QueryData<SysUserRoleSaveOrUpdateQuery>()
+            {
+                Criteria = new SysUserRoleSaveOrUpdateQuery()
+                {
+                    UserNo = param.Criteria.UserNo,
+                    AppNo = param.Criteria.AppNo,
+                    LstUserRole = lstInfo
+                }
+            };
+            var res = await _service.UserRoleSaveOrUpdateAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(false, res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                result.SetInfo(true, "更新用户角色成功！", 200);
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ErrData<bool>> UserRoleDeleteAsync(QueryData<SysUserRoleDeleteQuery> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            var res = await _service.UserRoleDeleteAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(false, res.ErrMsg, res.ErrCode);

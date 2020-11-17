@@ -36,5 +36,6 @@ namespace Hiywin.Entities.Frame
         string UpdateName { get; set; }
         DateTime? UpdateTime { get; set; }
         bool IsDelete { get; set; }
+        List<ISysUserRoleModel> LstUserRole { get; set; }
     }
 }

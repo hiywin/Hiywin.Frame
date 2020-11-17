@@ -1,4 +1,5 @@
 ﻿using Hiywin.Common.Data;
+using Hiywin.Dtos.Structs;
 using Hiywin.Entities.Frame;
 using Hiywin.IFrameService.Structs;
 using System;
@@ -37,5 +38,26 @@ namespace Hiywin.IFrameManager
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ErrData<bool>> UserDeleteAsync(QueryData<SysUserDeleteQuery> query);
+
+        /// <summary>
+        /// 获取所有用户角色列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ListResult<ISysUserRoleModel>> GetUserRolesAllAsync(QueryData<SysUserRoleQuery> query);
+
+        /// <summary>
+        /// 更新用户角色
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> UserRoleSaveOrUpdateAsync(QueryData<SysUserRoleParams> param);
+
+        /// <summary>
+        /// 删除用户角色
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<bool>> UserRoleDeleteAsync(QueryData<SysUserRoleDeleteQuery> query);
     }
 }

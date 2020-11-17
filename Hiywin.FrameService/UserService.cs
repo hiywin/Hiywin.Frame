@@ -261,5 +261,132 @@ namespace Hiywin.FrameService
 
             return result;
         }
+
+        public async Task<DataResult<List<ISysUserRoleModel>>> GetUserRolesAllAsync(QueryData<SysUserRoleQuery> query)
+        {
+            var lr = new DataResult<List<ISysUserRoleModel>>();
+
+            StringBuilder builder = new StringBuilder();
+            string sqlCondition = string.Empty;
+
+            StringHelper.ParameterAdd(builder, "UserNo = @UserNo", query.Criteria.UserNo);
+            StringHelper.ParameterAdd(builder, "RoleName like concat('%',@RoleName,'%')", query.Criteria.RoleName);
+            if (builder.Length > 0)
+            {
+                sqlCondition = " where " + builder.ToString();
+            }
+            string sql = @"select a.Id,UserNo,a.RoleNo,RoleName,a.Creator,a.CreateName,a.CreateTime
+                from sys_userrole a
+                left join sys_role b
+                on a.RoleNo=b.RoleNo"
+                + sqlCondition;
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlSearchConn))
+            {
+                try
+                {
+                    var modelList = await MysqlHelper.QueryListAsync<SysUserRoleModel>(dbConn, sql, "RoleName asc", query.Criteria);
+                    lr.Data = modelList.ToList<ISysUserRoleModel>();
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+
+            return lr;
+        }
+
+        public async Task<DataResult<int>> UserRoleSaveOrUpdateAsync(QueryData<SysUserRoleSaveOrUpdateQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqli = @"insert into sys_userrole(UserNo,RoleNo,Creator,CreateName,CreateTime)
+                values(@UserNo,@RoleNo,@Creator,@CreateName,@CreateTime)";
+            string sqld = @"delete from sys_userrole where UserNo=@UserNo and RoleNo=@RoleNo";
+            string sqlc = @"select UserNo,a.RoleNo,RoleName
+                from sys_userrole a left join sys_role b on a.RoleNo=b.RoleNo
+                where UserNo=@UserNo and AppNo=@AppNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    if (!string.IsNullOrEmpty(query.Criteria.UserNo) || !string.IsNullOrEmpty(query.Criteria.AppNo))
+                    {
+                        var userRoles = await MysqlHelper.QueryListAsync<SysUserRoleModel>(dbConn, sqlc, query.Criteria);
+                        var urs = userRoles.ToList<ISysUserRoleModel>();
+                        // 先删除职位所属平台关联的角色
+                        foreach (var model in urs)
+                        {
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, model, transaction);
+                            if (result.Data < 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 角色失败！", model.RoleName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                        // 新增选中的角色
+                        foreach (var model in query.Criteria.LstUserRole)
+                        {
+                            result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqli, model, transaction);
+                            if (result.Data <= 0)
+                            {
+                                result.SetErr(string.Format("更新 {0} 角色失败！", model.RoleName), -101);
+                                transaction.Rollback();
+                                return result;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result.SetErr("未选择用户或平台无法更新角色！", -101);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> UserRoleDeleteAsync(QueryData<SysUserRoleDeleteQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqld = @"delete from sys_userrole where UserNo=@UserNo and RoleNo=@RoleNo";
+            string sqlc = @"select Id from sys_userrole where UserNo=@UserNo and RoleNo=@RoleNo";
+            using (IDbConnection dbConn = MysqlHelper.OpenMysqlConnection(ConfigOptions.MysqlOptConn))
+            {
+                try
+                {
+                    result.Data = await MysqlHelper.QueryCountAsync(dbConn, sqlc, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("角色不存在或已被删除，请重试！", -101);
+                        return result;
+                    }
+                    result.Data = await MysqlHelper.ExecuteSqlAsync(dbConn, sqld, query.Criteria);
+                    if (result.Data <= 0)
+                    {
+                        result.SetErr("删除失败！", -101);
+                        return result;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
     }
 }
