@@ -21,6 +21,7 @@ namespace Hiywin.Api.Models.User
         public bool IsAdmin { get; set; }
         public string Icon { get; set; }
         public string AppNo { get; set; }
+        [Required]
         public string CompanyNo { get; set; }
         public string ApprovedBy { get; set; }
         public string ApprovedName { get; set; }
